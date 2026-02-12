@@ -1,0 +1,31 @@
+{
+  "version": "1.0.0",
+  "generated": "2026-02-11T23:30:00Z",
+  "root": "d4e5f6g7h8i9j0",
+  "files": {
+    "review.schema.md": {
+      "hash": "2c271286a60e9d722c6c672c80d6960144d48095645e8d008db027dde2a84881",
+      "lines": 338,
+      "type": "schema",
+      "purpose": "schema:review"
+    }
+  },
+  "directories": {
+    ".": {"hash": "d4e5f6g7h8i9j0", "files": 1, "dirs": 1},
+    ".index": {"hash": "empty", "files": 2, "dirs": 0}
+  },
+  "semanticIndex": {
+    "entryPoints": ["review.schema.md"],
+    "reviewTypes": {
+      "test": {"agent": "test-reviewer", "model": "opus", "focus": "coverage"},
+      "value": {"agent": "value-reviewer", "model": "opus", "focus": "architecture"},
+      "mlflow": {"agent": "mlflow-analyzer", "model": "opus", "focus": "performance"}
+    },
+    "priorities": ["P0", "P1", "P2", "P3"],
+    "confidenceThreshold": 80,
+    "taskGenerationRules": {
+      "eligible": ["P0", "P1"],
+      "minConfidence": 80
+    }
+  }
+}

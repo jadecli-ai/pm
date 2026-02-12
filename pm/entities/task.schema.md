@@ -52,6 +52,10 @@ agentHours: 3                     # Estimated: XS=0.5-1, S=1-2, M=2-4, L=4-8, XL
 subject: "Implement JWT generation"        # Brief imperative title
 activeForm: "Implementing JWT generation"  # Present continuous for spinner
 
+# Traceability (for review-generated tasks)
+source_review: null                        # Optional: REVIEW-XXX that generated this
+source_finding: null                       # Optional: F-XXX finding ID
+
 # Metadata
 tags: []
 ---

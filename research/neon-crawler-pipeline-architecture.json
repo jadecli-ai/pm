@@ -1,0 +1,409 @@
+{
+  "meta": {
+    "title": "Neon + Claude Code + Vercel + Docker/Ollama — llms.txt Crawler & Enrichment Pipeline",
+    "created": "2025-02-11T20:58:00Z",
+    "description": "Architecture for crawling llms.txt files, storing in Neon Postgres, enriching via pgqueuer task queue, and viewing in Vercel dashboard — powered by local Ollama models via Claude Code"
+  },
+
+  "tabs": {
+    "0": {
+      "title": "Neon API TypeScript SDK",
+      "url": "https://neon.com/docs/reference/typescript-sdk",
+      "insights": [
+        "Use @neondatabase/api-client to programmatically create the project, branches, databases, and roles for the crawl pipeline",
+        "The SDK supports createProject() with region_id and pg_version — use this in Claude Code bootstrap scripts to auto-provision the Neon DB",
+        "createProjectBranchDatabase() lets you create separate databases (e.g., raw_crawl_data, enriched_data) within branches",
+        "Use listProjectOperations() to poll async operations before proceeding — critical for pipeline orchestration",
+        "AI Rules available for TypeScript SDK — feed these into Claude Code for better Neon code generation"
+      ]
+    },
+    "1": {
+      "title": "Neon API Reference",
+      "url": "https://neon.com/docs/reference/api-reference",
+      "insights": [
+        "Base URL: https://console.neon.tech/api/v2/ — all CRUD operations for projects, branches, databases, endpoints",
+        "Three API key types: Personal (cross-org), Organization (team CI/CD), Project-scoped (limited) — use Personal for pipeline that spans free/paid orgs",
+        "Rate limits: 700 req/min, 40 req/s burst — implement exponential backoff in the crawler's DB write path",
+        "Async operations return status array — poll /projects/{id}/operations/{op_id} before dependent steps like embedding writes",
+        "OpenAPI 3.0 spec available — can auto-generate TypeScript types for the pipeline's Neon interactions"
+      ]
+    },
+    "2": {
+      "title": "Neon CLI",
+      "url": "https://neon.com/docs/reference/neon-cli",
+      "insights": [
+        "Install via 'brew install neonctl' or 'npm i -g neonctl' — use in Claude Code terminal sessions for quick DB ops",
+        "neon connection-string [branch] gets the conn string directly — pipe this to Docker containers or Vercel env vars",
+        "neon branches create/list/delete for managing crawl pipeline branches (staging vs production data)",
+        "neon set-context sets project/branch context so subsequent commands don't need IDs — great for Claude Code scripting",
+        "neon init initializes a project with AI coding assistant support — use this to bootstrap the pipeline project"
+      ]
+    },
+    "3": {
+      "title": "AI Starter Kit",
+      "url": "https://neon.com/docs/ai/ai-intro",
+      "insights": [
+        "pgvector extension is the core for storing embeddings in Neon — enable it on the enrichment database",
+        "LangChain + Neon integration for building the RAG pipeline on top of crawled llms.txt data",
+        "LlamaIndex integration available — use for indexing crawled documents before embedding generation",
+        "Hybrid search starter app (OpenAI) shows pattern for combining keyword + vector search on enriched data",
+        "Scale guide covers autoscaling + read replicas — use read replicas for the Vercel dashboard queries to avoid impacting the write pipeline"
+      ]
+    },
+    "4": {
+      "title": "Neon API TypeScript SDK (duplicate tab)",
+      "url": "https://neon.com/docs/reference/typescript-sdk",
+      "insights": [
+        "Same as tab 0 — consolidate usage. Key method: getConnectionUri() to dynamically fetch connection strings for Docker containers"
+      ]
+    },
+    "5": {
+      "title": "Integrating with Neon — Platform Overview",
+      "url": "https://neon.com/docs/guides/platform-integration-overview",
+      "insights": [
+        "AI Agents integration path is ideal for this pipeline — agents create/manage DBs programmatically with versioning",
+        "Embedded Postgres model (project-per-user) maps to project-per-crawl-pipeline for isolation",
+        "Claimable database flow (Instagres) useful for quick prototyping — spin up a DB instantly via 'npx get-db'",
+        "OAuth integration path for Vercel dashboard auth — lets users connect their existing Neon accounts",
+        "Two-org structure (free/paid) enables scaling the crawler from free tier to paid when volume increases"
+      ]
+    },
+    "6": {
+      "title": "AI Agent Integration Guide",
+      "url": "https://neon.com/docs/guides/ai-agent-integration",
+      "insights": [
+        "Project-per-tenant architecture with complete data isolation — each crawl pipeline instance gets its own project",
+        "Database versioning via PITR (1-7 day window) + snapshots (branches) — snapshot before each enrichment batch for rollback",
+        "Development branches for testing parsing/enrichment logic without affecting production crawl data",
+        "Consumption limits API lets you cap compute/storage per pipeline instance — prevent runaway costs from large crawls",
+        "Two-org transfer API for upgrading from free to paid tier — use Personal API key for cross-org transfers"
+      ]
+    },
+    "7": {
+      "title": "Neon Agent Plan",
+      "url": "https://neon.com/docs/introduction/agent-plan",
+      "insights": [
+        "Agent plan: $0.106/CU-hour compute, $0.35/GB-month storage, $0.2/GB-month for PITR",
+        "Up to 30,000 projects per org — massive scale for multi-tenant crawl pipelines",
+        "Scale-to-zero means idle databases cost nothing — perfect for batch crawl jobs that run periodically",
+        "Higher rate limits for Management API and Data API — critical for high-volume crawl + enrichment workflows",
+        "Built-in PostgREST-compatible Data API — Vercel frontend can query Neon directly without a backend"
+      ]
+    },
+    "8": {
+      "title": "Embedded Postgres Guide",
+      "url": "https://neon.com/docs/guides/embedded-postgres",
+      "insights": [
+        "Project provisioning under 1 second via API — instant DB for each new crawl job",
+        "Configure consumption limits during project creation: active_time, storage, data_transfer quotas",
+        "Use pooled connection strings (PgBouncer) for bursty crawl workloads writing to Neon",
+        "Monitor usage with consumption metrics API — poll every 15 min without waking suspended computes",
+        "Branching for isolated dev environments — test new parsers/enrichment on a branch before merging to main"
+      ]
+    },
+    "9": {
+      "title": "Vercel-Managed Integration (Neon + Vercel)",
+      "url": "https://neon.com/docs/guides/vercel-managed-integration",
+      "insights": [
+        "One-click Neon DB creation from Vercel Marketplace — auto-injects DATABASE_URL into Vercel env",
+        "Preview branching: each Vercel preview deployment gets isolated Neon branch — test dashboard changes against separate data",
+        "Environment vars: DATABASE_URL (pooled/PgBouncer), DATABASE_URL_UNPOOLED (direct) — use pooled for dashboard, unpooled for migrations",
+        "Auto branch cleanup when deployments expire — keeps Neon project organized",
+        "Billing consolidated inside Vercel invoice — simplifies cost tracking for the whole stack"
+      ]
+    },
+    "10": {
+      "title": "Neon-Managed Vercel Integration",
+      "url": "https://neon.com/docs/guides/neon-managed-vercel-integration",
+      "insights": [
+        "Link existing Neon project to Vercel while keeping billing in Neon — better for the pipeline since you manage the DB lifecycle",
+        "Creates isolated branch per preview deployment with automatic env var injection",
+        "vercel-dev branch for local development — clone of main that won't affect production crawl data",
+        "Automatic cleanup when Git branches are deleted (vs Vercel-managed which cleans on deployment deletion)",
+        "Use this path if you already have the Neon project set up via Claude Code/API before connecting Vercel"
+      ]
+    },
+    "11": {
+      "title": "Python SDK (Neon API)",
+      "url": "https://neon.com/docs/reference/python-sdk",
+      "insights": [
+        "pip install neon-api — use in Python-based crawler/enrichment scripts running in Docker",
+        "neon.projects(), neon.branches(), neon.databases() for programmatic pipeline management",
+        "neon.connection_uri() to get connection strings dynamically for Docker containers",
+        "consumption() method for tracking crawl pipeline usage metrics",
+        "AI Rules available for Python SDK — feed into Claude Code for better code generation"
+      ]
+    },
+    "12": {
+      "title": "Neon API Reference (duplicate tab)",
+      "url": "https://neon.com/docs/reference/api-reference",
+      "insights": [
+        "Same as tab 1 — reference for all REST endpoints. Key: branching API for snapshot-based versioning of enrichment stages"
+      ]
+    },
+    "13": {
+      "title": "Vercel Integrations REST API",
+      "url": "https://vercel.com/docs/integrations/create-integration/marketplace-api",
+      "insights": [
+        "Marketplace Partner API for building custom Vercel integrations — could build a 'Crawl Dashboard' integration",
+        "User auth via JWT tokens, System auth via OIDC — use system auth for automated pipeline status updates",
+        "Installation notifications API to alert users about crawl/enrichment status in Vercel dashboard",
+        "Billing webhooks (invoice.created/paid/notpaid/refunded) for tracking pipeline costs",
+        "SSO integration between Vercel and your crawl management dashboard"
+      ]
+    },
+    "14": {
+      "title": "@neondatabase/toolkit",
+      "url": "https://neon.com/docs/reference/neondatabase-toolkit",
+      "insights": [
+        "Combines Neon API SDK + Serverless Driver in one package — ideal for AI agents doing both management AND queries",
+        "toolkit.createProject() + toolkit.sql() = spin up DB and run queries in seconds — perfect for ephemeral crawl jobs",
+        "toolkit.deleteProject() for cleanup after batch crawl jobs complete",
+        "Access full API client via toolkit.apiClient for advanced operations (branching, snapshots, metrics)",
+        "Designed specifically for AI agent workflows — fits the Claude Code automation pattern perfectly"
+      ]
+    }
+  },
+
+  "architecture": {
+    "overview": "A 4-component system where Claude Code orchestrates local Ollama models in Docker to crawl llms.txt files, stores raw data in Neon Postgres, uses pgqueuer to queue standardized parsing/enrichment tasks (embeddings, metadata extraction, classification), and Vercel hosts a real-time dashboard to view pipeline status and data tables.",
+
+    "components": {
+      "1_local_docker_model_runner": {
+        "description": "Docker containers running Ollama with open-source LLMs for crawling and parsing",
+        "stack": ["Docker", "Docker Compose", "Ollama", "Claude Code CLI"],
+        "models": ["llama3.1:8b", "mistral:7b", "nomic-embed-text", "mxbai-embed-large"],
+        "responsibilities": [
+          "Fetch llms.txt files from target URLs",
+          "Parse and extract structured data from crawled pages",
+          "Generate embeddings locally via nomic-embed-text or mxbai-embed-large",
+          "Run Claude Code CLI to orchestrate the crawl pipeline",
+          "Execute pgqueuer worker processes that consume enrichment tasks"
+        ],
+        "docker_compose_services": {
+          "ollama": {
+            "image": "ollama/ollama:latest",
+            "ports": ["11434:11434"],
+            "volumes": ["ollama_data:/root/.ollama"],
+            "deploy": { "resources": { "reservations": { "devices": [{ "capabilities": ["gpu"] }] } } }
+          },
+          "crawler_worker": {
+            "build": "./crawler",
+            "environment": [
+              "DATABASE_URL=${NEON_DATABASE_URL}",
+              "OLLAMA_BASE_URL=http://ollama:11434",
+              "PGQUEUER_QUEUE=enrichment_tasks"
+            ],
+            "depends_on": ["ollama"]
+          },
+          "enrichment_worker": {
+            "build": "./enrichment",
+            "environment": [
+              "DATABASE_URL=${NEON_DATABASE_URL}",
+              "OLLAMA_BASE_URL=http://ollama:11434"
+            ],
+            "depends_on": ["ollama"],
+            "command": "python -m pgqueuer run enrichment_worker"
+          }
+        }
+      },
+
+      "2_claude_code_orchestrator": {
+        "description": "Claude Code acts as the intelligent orchestrator — generating code, managing Neon resources, and coordinating the pipeline",
+        "responsibilities": [
+          "Bootstrap Neon project via @neondatabase/toolkit or neonctl CLI",
+          "Generate and iterate on crawler code that fetches llms.txt endpoints",
+          "Generate pgqueuer task definitions for standardized enrichment pipeline",
+          "Create Neon branches for testing new parser/enrichment logic",
+          "Generate Vercel dashboard components (Next.js) for real-time pipeline monitoring",
+          "Debug and fix issues across the entire stack"
+        ],
+        "neon_ai_rules": "Load Neon AI rules for TypeScript/Python SDKs into Claude Code context for better code generation",
+        "key_commands": [
+          "neonctl init — bootstrap project with AI assistant",
+          "neonctl connection-string — get conn string for Docker env",
+          "neonctl branches create staging — create staging branch for testing"
+        ]
+      },
+
+      "3_neon_postgres_database": {
+        "description": "Neon serverless Postgres as the central data store with pgvector for embeddings and pgqueuer for task queuing",
+        "setup": {
+          "project_creation": "Use @neondatabase/toolkit or Neon API to create project in aws-us-east-1",
+          "extensions": ["pgvector", "pg_trgm", "pgqueuer (via pip, uses LISTEN/NOTIFY)"],
+          "connection": "Pooled (PgBouncer) for dashboard reads, Unpooled for migrations and pgqueuer workers"
+        },
+        "schema": {
+          "raw_pages": {
+            "description": "Raw crawled llms.txt content",
+            "columns": {
+              "id": "SERIAL PRIMARY KEY",
+              "url": "TEXT NOT NULL UNIQUE",
+              "domain": "TEXT NOT NULL",
+              "raw_content": "TEXT",
+              "content_hash": "TEXT",
+              "http_status": "INTEGER",
+              "headers_json": "JSONB",
+              "crawled_at": "TIMESTAMPTZ DEFAULT NOW()",
+              "crawl_duration_ms": "INTEGER"
+            }
+          },
+          "enrichment_queue": {
+            "description": "pgqueuer task queue table (auto-managed by pgqueuer)",
+            "task_types": [
+              "generate_embeddings — send raw_content to Ollama embed model, store in page_embeddings",
+              "extract_metadata — use Ollama LLM to extract structured metadata (title, description, endpoints, models listed)",
+              "classify_content — classify page type (api_docs, model_card, framework, tool)",
+              "extract_links — parse outbound links for recursive crawling",
+              "summarize — generate concise summary via Ollama LLM",
+              "detect_language — identify programming languages referenced",
+              "extract_code_snippets — pull code blocks into structured format"
+            ]
+          },
+          "page_embeddings": {
+            "description": "Vector embeddings for semantic search",
+            "columns": {
+              "id": "SERIAL PRIMARY KEY",
+              "page_id": "INTEGER REFERENCES raw_pages(id)",
+              "chunk_index": "INTEGER",
+              "chunk_text": "TEXT",
+              "embedding": "vector(768)",
+              "model_name": "TEXT DEFAULT 'nomic-embed-text'",
+              "created_at": "TIMESTAMPTZ DEFAULT NOW()"
+            },
+            "indexes": ["CREATE INDEX ON page_embeddings USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100)"]
+          },
+          "page_metadata": {
+            "description": "Enriched structured metadata extracted by LLM",
+            "columns": {
+              "id": "SERIAL PRIMARY KEY",
+              "page_id": "INTEGER REFERENCES raw_pages(id)",
+              "title": "TEXT",
+              "description": "TEXT",
+              "page_type": "TEXT",
+              "language_tags": "TEXT[]",
+              "framework_tags": "TEXT[]",
+              "model_names": "TEXT[]",
+              "api_endpoints": "JSONB",
+              "summary": "TEXT",
+              "enriched_at": "TIMESTAMPTZ DEFAULT NOW()",
+              "enrichment_model": "TEXT"
+            }
+          },
+          "crawl_jobs": {
+            "description": "Track crawl job status for dashboard",
+            "columns": {
+              "id": "SERIAL PRIMARY KEY",
+              "status": "TEXT DEFAULT 'pending'",
+              "total_urls": "INTEGER",
+              "completed_urls": "INTEGER DEFAULT 0",
+              "failed_urls": "INTEGER DEFAULT 0",
+              "started_at": "TIMESTAMPTZ",
+              "completed_at": "TIMESTAMPTZ"
+            }
+          },
+          "code_snippets": {
+            "description": "Extracted code blocks from crawled pages",
+            "columns": {
+              "id": "SERIAL PRIMARY KEY",
+              "page_id": "INTEGER REFERENCES raw_pages(id)",
+              "language": "TEXT",
+              "code": "TEXT",
+              "context": "TEXT",
+              "embedding": "vector(768)"
+            }
+          }
+        },
+        "branching_strategy": {
+          "main": "Production crawl data — Vercel production reads from here",
+          "staging": "Test new parsers/enrichment logic before promoting",
+          "snapshots": "Create before major enrichment batches for rollback: 'v1-initial-crawl', 'v2-embeddings-added'"
+        }
+      },
+
+      "4_vercel_dashboard": {
+        "description": "Next.js app on Vercel for real-time monitoring of crawl pipeline and browsing enriched data",
+        "stack": ["Next.js 15 (App Router)", "Tailwind CSS", "shadcn/ui", "@neondatabase/serverless", "Recharts/Tremor"],
+        "integration": "Use Neon-Managed Vercel Integration to link existing Neon project — keeps billing in Neon, gets preview branching",
+        "pages": {
+          "/": "Dashboard overview — crawl job status, total pages, enrichment progress, recent activity",
+          "/crawl-jobs": "List all crawl jobs with status, progress bars, start/complete times",
+          "/pages": "Browse raw_pages table with search, filter by domain, sort by crawl date",
+          "/pages/[id]": "Detail view — raw content, metadata, embeddings, code snippets, linked enrichments",
+          "/embeddings": "Vector search interface — query page_embeddings with natural language, see similar pages",
+          "/enrichment": "Real-time enrichment queue status — pending/active/completed/failed tasks from pgqueuer",
+          "/schema": "View all table schemas, row counts, index stats",
+          "/analytics": "Charts — pages crawled over time, enrichment throughput, embedding coverage, error rates"
+        },
+        "real_time_pattern": {
+          "approach": "Poll Neon via @neondatabase/serverless driver every 5s from Next.js API routes, or use Vercel Cron Jobs for background syncs",
+          "connection": "Use DATABASE_URL (pooled) for all dashboard queries to handle concurrent users"
+        },
+        "env_vars": {
+          "DATABASE_URL": "Auto-injected by Neon-Vercel integration (pooled)",
+          "DATABASE_URL_UNPOOLED": "Auto-injected (for migrations)",
+          "NEON_API_KEY": "For Neon management API calls from dashboard admin features"
+        }
+      }
+    },
+
+    "data_flow": [
+      "1. Claude Code generates crawler code and bootstraps Neon project with schema",
+      "2. Docker crawler_worker fetches llms.txt URLs → inserts into raw_pages table in Neon",
+      "3. After each raw_pages INSERT, a Postgres trigger (or crawler code) enqueues tasks into pgqueuer",
+      "4. Docker enrichment_worker(s) consume pgqueuer tasks:",
+      "   4a. 'generate_embeddings' → sends text chunks to Ollama nomic-embed-text → writes to page_embeddings",
+      "   4b. 'extract_metadata' → sends content to Ollama llama3.1 → writes structured data to page_metadata",
+      "   4c. 'classify_content' → Ollama classifies page type → updates page_metadata.page_type",
+      "   4d. 'extract_code_snippets' → regex + LLM → writes to code_snippets with embeddings",
+      "   4e. 'summarize' → Ollama generates summary → updates page_metadata.summary",
+      "5. Vercel dashboard reads from all tables via pooled connection, displays real-time status",
+      "6. Users can trigger new crawl jobs from dashboard → writes to crawl_jobs → crawler picks up",
+      "7. Neon branches used for testing new enrichment logic; snapshots for versioning data states"
+    ],
+
+    "pgqueuer_setup": {
+      "description": "pgqueuer is a Python library that uses Postgres LISTEN/NOTIFY for task queuing — no external message broker needed",
+      "install": "pip install pgqueuer",
+      "pattern": {
+        "define_tasks": "Register task handlers with @pgqueuer.task('generate_embeddings') decorator",
+        "enqueue": "INSERT INTO pgqueuer_queue (task_name, payload) — triggered after raw_pages INSERT",
+        "consume": "Workers run 'python -m pgqueuer run worker_module' — auto-scales with multiple Docker containers",
+        "monitor": "Query pgqueuer_queue table directly from Vercel dashboard for status"
+      },
+      "task_definitions": [
+        { "name": "generate_embeddings", "input": "page_id", "output": "page_embeddings rows", "model": "nomic-embed-text" },
+        { "name": "extract_metadata", "input": "page_id", "output": "page_metadata row", "model": "llama3.1:8b" },
+        { "name": "classify_content", "input": "page_id", "output": "page_metadata.page_type", "model": "llama3.1:8b" },
+        { "name": "extract_links", "input": "page_id", "output": "new URLs enqueued for crawling", "model": "regex + llama3.1" },
+        { "name": "summarize", "input": "page_id", "output": "page_metadata.summary", "model": "mistral:7b" },
+        { "name": "extract_code_snippets", "input": "page_id", "output": "code_snippets rows", "model": "llama3.1:8b" }
+      ]
+    },
+
+    "setup_sequence": [
+      "Step 1: Install Ollama locally or in Docker, pull models: ollama pull llama3.1:8b && ollama pull nomic-embed-text",
+      "Step 2: Claude Code bootstraps Neon project: npx @neondatabase/toolkit or neonctl init",
+      "Step 3: Claude Code generates SQL schema (raw_pages, page_embeddings, page_metadata, etc.) and runs migrations",
+      "Step 4: Claude Code generates pgqueuer task worker code in Python",
+      "Step 5: Claude Code generates crawler code (fetch llms.txt → parse → insert → enqueue)",
+      "Step 6: docker-compose up — starts Ollama + crawler + enrichment workers",
+      "Step 7: Connect Neon project to Vercel via Neon-Managed Integration",
+      "Step 8: Claude Code generates Next.js dashboard — deploy to Vercel",
+      "Step 9: Trigger first crawl job — monitor in Vercel dashboard",
+      "Step 10: Iterate: use Neon branches to test new parsers, snapshot before batch enrichments"
+    ],
+
+    "key_neon_features_used": {
+      "serverless_postgres": "Scale-to-zero between crawl batches, autoscale during heavy enrichment",
+      "pgvector": "Store and query vector embeddings for semantic search over crawled content",
+      "branching": "Instant copy-on-write branches for testing enrichment logic safely",
+      "snapshots": "Version data before/after enrichment batches for rollback capability",
+      "neon_serverless_driver": "Vercel dashboard connects via @neondatabase/serverless for edge-compatible queries",
+      "api_and_sdks": "TypeScript SDK + Python SDK + CLI for full pipeline management",
+      "toolkit": "@neondatabase/toolkit for ephemeral DB creation in agent workflows",
+      "vercel_integration": "Auto env var injection, preview branching, billing consolidation",
+      "consumption_metrics": "Monitor pipeline costs via API — compute time, storage, data transfer"
+    }
+  }
+}
