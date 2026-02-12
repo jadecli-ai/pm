@@ -1,0 +1,271 @@
+{
+  "version": "1.0.0",
+  "generated": "2026-02-11T18:07:55.317359",
+  "root": "0eb4327a0168f9df0e479762f3782406297a700dbbc260160dfb036e9bcc3dff",
+  "files": {
+    "ENTRYPOINT.md": {
+      "hash": "5c4dccefd9d1fd223749a2c54b1682700bac1d8defa56d2e55758453453b6c61",
+      "lines": 191,
+      "type": "doc",
+      "purpose": "doc:ENTRYPOINT"
+    },
+    "README.md": {
+      "hash": "42bbb09cd17e364b3fa78f78f044f29dc57871b680b89d8717bd04a133dfe451",
+      "lines": 112,
+      "type": "doc",
+      "purpose": "doc:README"
+    },
+    "agents/sdm.md": {
+      "hash": "46f6ded5fe849a4d3e9ad6bd3dee254d78ccc23100e6c728bf8dac379409bdfe",
+      "lines": 117,
+      "type": "agent",
+      "purpose": "agent:sdm:claude-sonnet-4-5-20250929",
+      "name": "sdm",
+      "model": "claude-sonnet-4-5-20250929"
+    },
+    "agents/sprint-master.md": {
+      "hash": "f17c45de853b570109fa23cf5af6882c6c9cefcfbb7e4a23e1bbe92a9b2b538b",
+      "lines": 153,
+      "type": "agent",
+      "purpose": "agent:sprint-master:haiku",
+      "name": "sprint-master",
+      "model": "haiku"
+    },
+    "agents/staff-engineer.md": {
+      "hash": "e51b28426ebea96425d8de418b736e08df361f6cd593db9e642feaf2c9d096dc",
+      "lines": 114,
+      "type": "agent",
+      "purpose": "agent:staff-engineer:claude-sonnet-4-5-20250929",
+      "name": "staff-engineer",
+      "model": "claude-sonnet-4-5-20250929"
+    },
+    "agents/vp-product.md": {
+      "hash": "12353fa6848b3dd5554c40803fcf4f8e590600be8f87fd9da6a4e76f7c00319f",
+      "lines": 110,
+      "type": "agent",
+      "purpose": "agent:vp-product:claude-opus-4-5-20250929",
+      "name": "vp-product",
+      "model": "claude-opus-4-5-20250929"
+    },
+    "docs/fetch/claude-code-memory.md": {
+      "hash": "4df57e870aa34ad750bd514b880fce156dfd2af19543fd9b58fbc692c010667f",
+      "lines": 122,
+      "type": "doc",
+      "purpose": "doc:claude-code-memory"
+    },
+    "docs/fetch/claude-code-subagents.md": {
+      "hash": "a5e71bc0d251d24c6e370bdd0185427308f2f43ff431d543bd110b073c86d4fe",
+      "lines": 155,
+      "type": "doc",
+      "purpose": "doc:claude-code-subagents"
+    },
+    "docs/fetch/claude-mem-plugin.md": {
+      "hash": "c0c697b0daf3e33418e0c831562500a6b579674e95dd332ffcfd95056a63401b",
+      "lines": 67,
+      "type": "doc",
+      "purpose": "doc:claude-mem-plugin"
+    },
+    "docs/fetch/memory-bank-system.md": {
+      "hash": "8fd054d10f55f9c94c5b4f74a9d112da4be13259e46d9055934886e815bfb57a",
+      "lines": 55,
+      "type": "doc",
+      "purpose": "doc:memory-bank-system"
+    },
+    "docs/research/claude-code-memory-system.md": {
+      "hash": "6aa5bf5f400f0acf6b7eceebee49abe5037356a3a10c7851a78d58b8d6e4108a",
+      "lines": 313,
+      "type": "doc",
+      "purpose": "doc:claude-code-memory-system"
+    },
+    "entities/README.md": {
+      "hash": "3de62584a07aee8855e4f0ac33681f0c4f6b6e549e9db7a83812c18d6fcfbdc9",
+      "lines": 101,
+      "type": "doc",
+      "purpose": "doc:README"
+    },
+    "entities/epic.schema.md": {
+      "hash": "09a12c42b60fab7ef275ad8225706b1603c0681a69c7ea31c8464d724a4daee5",
+      "lines": 158,
+      "type": "schema",
+      "purpose": "schema:epic"
+    },
+    "entities/examples/EPIC-001.md": {
+      "hash": "70b4ddbfa5195a4b09de1aaa3c3e73cfca51ab4d6a22de940d1b121f12eba02d",
+      "lines": 88,
+      "type": "entity",
+      "purpose": "entity:epic:EPIC-001",
+      "id": "EPIC-001",
+      "version": "1.2.0",
+      "status": "in_progress"
+    },
+    "entities/examples/TASK-004.md": {
+      "hash": "eb96e8ce73d403e707610ece0178597c084f67cd5654d2e684f94b2c6c1493ae",
+      "lines": 128,
+      "type": "entity",
+      "purpose": "entity:task:TASK-004",
+      "id": "TASK-004",
+      "version": "1.0.1",
+      "status": "in_progress"
+    },
+    "entities/story.schema.md": {
+      "hash": "02fabcbaac8f2727495a3a501d21bf80e9047427801ff18c9d99f9b1afe28afe",
+      "lines": 163,
+      "type": "schema",
+      "purpose": "schema:story"
+    },
+    "entities/subtask.schema.md": {
+      "hash": "47b763979a0c7e862338e49c8309a26392697a067873858f4f199d41e35af011",
+      "lines": 161,
+      "type": "schema",
+      "purpose": "schema:subtask"
+    },
+    "entities/task.schema.md": {
+      "hash": "cecd72d00d876b4bfceafdd00c85f74b347d1cd75de9442caa7ac8e54cf23931",
+      "lines": 217,
+      "type": "schema",
+      "purpose": "schema:task"
+    },
+    "scripts/setup-github-project.sh": {
+      "hash": "136b266e33eed2dbe90d4b9f9c1830cc071fc85c47902d1ae3536ca4c03913e8",
+      "lines": 128,
+      "type": "script",
+      "purpose": "script:setup-github-project"
+    },
+    "tests/README.md": {
+      "hash": "7999b86b2441cea269ca15a13a413e2d296e1ddce1d0fd8954459f453f397f76",
+      "lines": 39,
+      "type": "test",
+      "purpose": "test:README"
+    },
+    "tests/claude-code-alignment.md": {
+      "hash": "0d5c72e82a16a00f0b619e37260a44ad5d68fd6d65a2516fb38614fdd30a1859",
+      "lines": 213,
+      "type": "test",
+      "purpose": "test:claude-code-alignment"
+    },
+    "tests/run-tests.sh": {
+      "hash": "0c34dc3febcd1d862ee0969e142d2f8e8d5d3bf1eb960c50df9f17acd7eb361b",
+      "lines": 157,
+      "type": "test",
+      "purpose": "test:run-tests"
+    },
+    "tests/validate-entity.sh": {
+      "hash": "0f4e764a9d74ec7a2a264f5dfa366f32a14423254e5a21348e0d53e3a213211b",
+      "lines": 140,
+      "type": "test",
+      "purpose": "test:validate-entity"
+    }
+  },
+  "directories": {
+    ".": {
+      "hash": "e80ccf3279119ceb026fc4cba0eb2cbb7ecfc9b45d570bf9fd527e23d532d260",
+      "files": 2,
+      "dirs": 4
+    },
+    "agents": {
+      "hash": "1ce2b4e4b6e14962d18edc8ac4067e4fc57f8e87c96e2630b4297c6bd6be92e6",
+      "files": 4,
+      "dirs": 0
+    },
+    "docs/fetch": {
+      "hash": "e66169540182684fd8f58ad878c4b63ac6f161d58975bec1506064cb3bed9a53",
+      "files": 4,
+      "dirs": 0
+    },
+    "docs/research": {
+      "hash": "2c7d79058613bc662f1d6e2b5662cba3922c3fcd634beb7f508ee64c9d774c0f",
+      "files": 1,
+      "dirs": 0
+    },
+    "entities": {
+      "hash": "45cda976be0aa5475630b49dcbe8283e10c769680afd656283e4f4b84de0f0f3",
+      "files": 5,
+      "dirs": 1
+    },
+    "entities/examples": {
+      "hash": "1637d4ec02cff130ac56544f64b559f4642bf14ff6a60b01981086dfa0584536",
+      "files": 2,
+      "dirs": 0
+    },
+    "scripts": {
+      "hash": "4783784a3d1bc4293bcd069ec7f01be16fea8a7ec26458d0452124ea1fdb53a7",
+      "files": 1,
+      "dirs": 0
+    },
+    "tests": {
+      "hash": "d7d0d0d6cb3b3032de6e760ea130588ad0ad3d77e453e5ae8e2f4a46abf1b1e6",
+      "files": 4,
+      "dirs": 0
+    }
+  },
+  "semanticIndex": {
+    "entryPoints": [
+      "ENTRYPOINT.md",
+      "README.md"
+    ],
+    "agents": {
+      "vp-product": {
+        "model": "opus",
+        "owns": [
+          "epics"
+        ],
+        "file": "agents/vp-product.md"
+      },
+      "sdm": {
+        "model": "sonnet",
+        "owns": [
+          "stories",
+          "tasks"
+        ],
+        "file": "agents/sdm.md"
+      },
+      "staff-engineer": {
+        "model": "sonnet",
+        "owns": [
+          "tasks",
+          "subtasks"
+        ],
+        "file": "agents/staff-engineer.md"
+      },
+      "sprint-master": {
+        "model": "haiku",
+        "owns": [
+          "ceremonies"
+        ],
+        "file": "agents/sprint-master.md"
+      }
+    },
+    "entityHierarchy": [
+      "epic",
+      "story",
+      "task",
+      "subtask"
+    ],
+    "schemas": {
+      "epic": "entities/epic.schema.md",
+      "story": "entities/story.schema.md",
+      "task": "entities/task.schema.md",
+      "subtask": "entities/subtask.schema.md"
+    },
+    "claudeCodeAlignment": {
+      "taskFields": [
+        "subject",
+        "activeForm",
+        "status",
+        "blockedBy",
+        "blocks"
+      ],
+      "tools": [
+        "TaskCreate",
+        "TaskUpdate",
+        "TaskGet",
+        "TaskList"
+      ]
+    },
+    "tests": {
+      "runner": "tests/run-tests.sh",
+      "validator": "tests/validate-entity.sh",
+      "alignment": "tests/claude-code-alignment.md"
+    }
+  }
+}

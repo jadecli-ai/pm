@@ -28,6 +28,24 @@ claude --agent ~/projects/.claude-org/pm/agents/vp-product.md
 cat ~/projects/.claude-org/pm/ENTRYPOINT.md
 ```
 
+## Entity Hierarchy
+
+Work items are tracked in a 4-level hierarchy with YAML frontmatter:
+
+```
+Epic (strategic initiative) ─── VP Product owns
+  └── Story (user-facing feature) ─── SDM owns
+        └── Task (implementation unit) ─── Staff Engineer owns
+              └── Subtask (atomic work) ─── Staff Engineer owns
+```
+
+Each entity has:
+- **Frontmatter**: id, version (semver), status, dependencies
+- **Claude Code alignment**: Tasks map 1:1 to TaskCreate/TaskUpdate
+- **Dependency tracking**: `dependsOn`, `blocks`, `blockedBy` fields
+
+See `entities/README.md` for full schema documentation.
+
 ## Files
 
 | File | Purpose |
@@ -37,6 +55,8 @@ cat ~/projects/.claude-org/pm/ENTRYPOINT.md
 | `agents/sdm.md` | Software Development Manager agent |
 | `agents/staff-engineer.md` | Staff Engineer agent |
 | `agents/sprint-master.md` | Sprint Master agent |
+| `entities/` | Entity schemas and examples |
+| `tests/` | Integration tests for entity validation |
 | `scripts/setup-github-project.sh` | GitHub project setup |
 
 ## Iteration Workflow
@@ -65,6 +85,23 @@ Run setup script:
 ```bash
 ~/projects/.claude-org/pm/scripts/setup-github-project.sh <github-user>
 ```
+
+## Pre-computed Index (Merkle Tree)
+
+Agents read `.index/AGENT-INDEX.md` for instant context without exploration.
+
+```bash
+# Check if index is stale
+python3 .index/check-changes.py
+
+# Regenerate after changes
+python3 .index/generate-merkle.py
+```
+
+The Merkle tree provides:
+- **O(1) change detection** via root hash comparison
+- **Incremental sync** - only fetch changed file hashes
+- **Semantic index** - file purposes, entity IDs, agent ownership
 
 ## Dogfooding Principles
 

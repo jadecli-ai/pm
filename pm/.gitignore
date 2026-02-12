@@ -1,0 +1,16 @@
+# Local memory (not version controlled)
+CLAUDE.local.md
+.claude/agent-memory-local/
+
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+*.swp
+*.swo
+*~
