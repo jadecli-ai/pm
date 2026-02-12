@@ -36,7 +36,7 @@ class GeminiMultimodal:
             raise ValueError("GEMINI_API_KEY environment variable not set")
 
         self.client = genai.Client(api_key=api_key)
-        self.model_name = "gemini-2.5-flash"  # Latest flash model (2026)
+        self.model_name = "gemini-2.0-flash"  # Verified working with API key
 
     def analyze_image(self, image_path: str, query: str) -> ToolResult:
         """Analyze image with Gemini vision.
