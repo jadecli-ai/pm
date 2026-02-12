@@ -66,15 +66,15 @@ class LiveMetaAdsClient:
         """Fetch daily spend data from Meta Ads API."""
         url = f"{self.BASE_URL}/{campaign_id}/insights"
         params = {
-            "access_token": self._access_token,
             "fields": "campaign_id,campaign_name,spend,impressions,clicks",
             "time_range": f'{{"since":"{start_date}","until":"{end_date}"}}',
             "time_increment": 1,  # Daily breakdown
             "level": "campaign",
         }
+        headers = {"Authorization": f"Bearer {self._access_token}"}
 
         async with httpx.AsyncClient() as client:
-            response = await client.get(url, params=params, timeout=30.0)
+            response = await client.get(url, params=params, headers=headers, timeout=30.0)
             response.raise_for_status()
             data = response.json()
 
