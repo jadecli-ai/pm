@@ -311,7 +311,121 @@ Conventional commits auto-generate CHANGELOG.md:
 
 ---
 
-## Steering Principles
+## Steering System
+
+### Budget-Aware Agent Execution
+
+Agents in this PM system track token/turn consumption and hand off context when approaching limits. This enables long-running research and complex planning tasks.
+
+**Budget Calculation**:
+```
+budget_ratio = max(turn_ratio, token_ratio)
+turn_ratio = current_turn / max_turns
+token_ratio = tokens_consumed / token_budget
+```
+
+### PM Agent Budgets
+
+| Agent | Model | Turns | Use Case |
+|-------|-------|-------|----------|
+| `steering-orchestrator` | Opus 4.5 | 25 | Deep research, extended thinking |
+| `vp-product` | Opus 4.5 | 25 | Strategic planning, roadmap |
+| `sdm` | Sonnet 4.5 | 15 | Sprint planning, task breakdown |
+| `staff-engineer` | Sonnet 4.5 | 15 | Implementation, coding |
+| `sprint-master` | Haiku 3.5 | 10 | Coordination, status tracking |
+
+### Wrap-up Thresholds
+
+| Phase | Ratio | Agent Action |
+|-------|-------|--------------|
+| Normal | < 70% | Continue work |
+| Warning | 70-79% | Prioritize critical items |
+| Wrap-up | 80-89% | Stop new work, synthesize, handoff |
+| Critical | 90%+ | Immediate handoff |
+
+### Handoff Protocol
+
+When `budget_ratio >= 0.80`:
+
+1. **Stop new exploration** - Don't start new research threads
+2. **Synthesize findings** - Consolidate what you've learned
+3. **Document incomplete** - List remaining work items
+4. **Generate handoff** - Create `<handoff>` YAML block
+
+```yaml
+<handoff>
+reason: "budget_wrap_up_80_percent"
+completed:
+  - "Research topic A - summary"
+  - "Created entity TASK-XXX"
+incomplete:
+  - "Topic B research - 60% done"
+  - "Integration testing"
+context:
+  active_entities:
+    epic: "ORG-EPIC-001"
+    task: "TASK-005"
+  key_files:
+    - "lib/prompt_adapter.py"
+    - "entities/examples/TASK-005.md"
+  decisions:
+    - "Use YAML for handoff format"
+    - "State machine over regex for intent"
+successor:
+  agent: "staff-engineer"
+  prompt_hint: "Continue Topic B research from handoff"
+metrics:
+  turns_used: 20
+  budget_ratio: 0.80
+</handoff>
+```
+
+### Chain Decisions
+
+After handoff, decide chain continuation:
+
+**Continue** when:
+- Incomplete items exist AND successor is available
+- Research requires multiple agent sessions
+- Task explicitly requests multi-agent execution
+
+**Terminate** when:
+- All acceptance criteria met
+- No incomplete items remain
+- Error state requires human intervention
+
+### Steering Configuration
+
+Configuration files in `../steering/`:
+
+```
+steering/
+├── config/
+│   ├── budgets.yaml      # Token/turn limits by model
+│   └── thresholds.yaml   # Wrap-up thresholds
+└── lib/
+    ├── budget_tracker.py    # BudgetTracker class
+    └── handoff_generator.py # HandoffDocument generation
+```
+
+### Agent Integration
+
+Agents with steering support include frontmatter:
+
+```yaml
+---
+name: steering-orchestrator
+steering:
+  token_budget: 160000
+  turn_budget: 25
+  wrap_up_threshold: 0.80
+  extended_thinking: true
+---
+```
+
+---
+
+## Design Principles
 
 > When uncertain, ask: "How would Anthropic's 2026 engineering team solve this?"
 
@@ -322,3 +436,4 @@ Conventional commits auto-generate CHANGELOG.md:
 5. **Fail over degrade**: Crash cleanly, don't limp along
 6. **Explicit over implicit**: Dependencies in frontmatter
 7. **Delete over deprecate**: Remove unused code completely
+8. **Budget-aware**: Track consumption, handoff gracefully

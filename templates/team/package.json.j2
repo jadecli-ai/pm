@@ -1,0 +1,27 @@
+{
+  "name": "@jadecli-ai/{{ team_slug }}",
+  "version": "1.0.0",
+  "description": "{{ description }}",
+  "team": {
+    "name": "{{ team_name }}",
+    "slug": "{{ team_slug }}",
+    "lead": "{{ team_slug }}-lead",
+    "members": [
+      "{{ team_slug }}-engineer",
+      "{{ team_slug }}-tester"
+    ],
+    "models": {
+      "lead": "{{ lead_model }}",
+      "engineer": "{{ engineer_model }}",
+      "tester": "{{ tester_model }}"
+    }
+  },
+  "steering": {
+    "token_budget": {{ token_budget }},
+    "wrap_up_threshold": {{ wrap_up_threshold }}
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jadecli-ai/{{ team_slug }}"
+  }
+}

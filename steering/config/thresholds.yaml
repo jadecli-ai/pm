@@ -1,0 +1,63 @@
+# Wrap-up and Handoff Thresholds
+#
+# When budget_ratio >= wrap_up_threshold, agent should:
+#   1. Stop new exploration
+#   2. Synthesize findings
+#   3. Document incomplete items
+#   4. Generate handoff document
+
+thresholds:
+  # Default wrap-up threshold (80% of budget)
+  wrap_up: 0.80
+
+  # Warning threshold (70% of budget) - optional early warning
+  warning: 0.70
+
+  # Critical threshold (90% of budget) - force immediate wrap-up
+  critical: 0.90
+
+# Chain continuation decisions
+chain_decisions:
+  # Continue to successor when:
+  continue:
+    - "incomplete items exist AND successor available"
+    - "explicitly requested by parent task"
+    - "handoff confidence >= 0.7"
+
+  # Terminate chain when:
+  terminate:
+    - "all acceptance criteria met"
+    - "no incomplete items"
+    - "explicitly marked as terminal task"
+    - "error state requires human intervention"
+
+# Handoff document format
+handoff:
+  format: yaml
+  required_fields:
+    - reason        # Why handoff triggered
+    - completed     # List of completed items
+    - incomplete    # List of remaining items
+    - context       # Active entities, key files, decisions
+    - successor     # Recommended next agent
+    - metrics       # Turns used, budget ratio
+
+  optional_fields:
+    - warnings      # Issues to flag for successor
+    - blockers      # What's blocking progress
+    - artifacts     # Files created/modified
+
+# Agent-specific overrides
+overrides:
+  steering-orchestrator:
+    wrap_up: 0.80
+    extended_thinking: true
+    max_turns: 25
+
+  staff-engineer:
+    wrap_up: 0.85       # Slightly higher - finish more work
+    max_turns: 15
+
+  sprint-master:
+    wrap_up: 0.75       # Earlier wrap-up - coordination role
+    max_turns: 10
