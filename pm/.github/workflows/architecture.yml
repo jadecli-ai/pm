@@ -1,0 +1,45 @@
+name: Update Architecture
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  update-architecture:
+    if: github.event.pull_request.merged == true || github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Generate Architecture
+        run: |
+          python scripts/architecture/generate.py
+
+      - name: Check for changes
+        id: changes
+        run: |
+          git diff --quiet ARCHITECTURE.md ARCHITECTURE.html architecture.json || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add ARCHITECTURE.md ARCHITECTURE.html architecture.json
+          git commit -m "docs(architecture): auto-update architecture diagrams
+
+          Co-Authored-By: GitHub Actions <action@github.com>"
+          git push

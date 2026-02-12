@@ -1,0 +1,82 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run tests
+        run: |
+          chmod +x tests/run-tests.sh
+          ./tests/run-tests.sh
+
+      - name: Check index freshness
+        run: |
+          python .index/generate-merkle.py
+          git diff --exit-code .index/merkle-tree.json || {
+            echo "❌ Merkle tree index is stale. Run: python .index/generate-merkle.py"
+            exit 1
+          }
+
+      - name: Validate architecture would generate
+        run: |
+          python scripts/architecture/generate.py
+          echo "✅ Architecture generation successful"
+
+      - name: Check conventional commits
+        uses: webiny/action-conventional-commits@v1.3.0
+        with:
+          allowed-commit-types: "feat,fix,docs,refactor,test,chore,perf,ci,revert"
+
+  lint-frontmatter:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate frontmatter
+        run: |
+          python -c "
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, '.')
+          from lib.frontmatter import parse_file
+
+          errors = []
+          for f in Path('.').rglob('*.md'):
+              if '.git' in str(f):
+                  continue
+              try:
+                  fm = parse_file(f)
+                  if fm and 'version' in fm:
+                      # Has frontmatter, validate it
+                      if 'id' not in fm:
+                          errors.append(f'{f}: missing id')
+              except Exception as e:
+                  errors.append(f'{f}: {e}')
+
+          if errors:
+              print('❌ Frontmatter errors:')
+              for e in errors:
+                  print(f'  - {e}')
+              sys.exit(1)
+          print('✅ All frontmatter valid')
+          "

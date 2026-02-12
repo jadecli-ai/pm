@@ -1,8 +1,14 @@
 {
   "version": "1.0.0",
-  "generated": "2026-02-11T18:17:16.087908",
-  "root": "763526223fc0ebdaa93bbb3dbbf9e3b03055ecd4fac4616e14a3eb05c5fddcc2",
+  "generated": "2026-02-11T18:24:38.475590",
+  "root": "db69c4aaba37a4603c6fe8492be7afbda912bc34b0c779188c838bd6bd943c49",
   "files": {
+    "ARCHITECTURE.md": {
+      "hash": "b583d4a53752402f2a978b520e01fed9e1213607e5595033de97ce38d29eeb7d",
+      "lines": 117,
+      "type": "doc",
+      "purpose": "doc:ARCHITECTURE"
+    },
     "CHANGELOG.md": {
       "hash": "b855f1e64d4a2559df44d593b4f9cde4f28000b11db54fac86024c00e5d0edb7",
       "lines": 56,
@@ -10,8 +16,8 @@
       "purpose": "doc:CHANGELOG"
     },
     "CLAUDE.md": {
-      "hash": "9b0dc25bb06f720eb5980a16a7086fdfb1e98756d51a1b983b046d24d7bf6130",
-      "lines": 241,
+      "hash": "de88162ef60ef6c603e50cabb3ae3264009e739a6f829c11a7536c96806b20c9",
+      "lines": 298,
       "type": "doc",
       "purpose": "doc:CLAUDE"
     },
@@ -58,6 +64,12 @@
       "purpose": "agent:vp-product:claude-opus-4-5-20250929",
       "name": "vp-product",
       "model": "claude-opus-4-5-20250929"
+    },
+    "docs/fetch/anthropic-engineering-patterns.md": {
+      "hash": "127e7e1223ea50979523f700a8faa5a875f35b02fbb2a02dcc97c3463b8fd531",
+      "lines": 81,
+      "type": "doc",
+      "purpose": "doc:anthropic-engineering-patterns"
     },
     "docs/fetch/claude-code-memory.md": {
       "hash": "4df57e870aa34ad750bd514b880fce156dfd2af19543fd9b58fbc692c010667f",
@@ -137,6 +149,18 @@
       "type": "schema",
       "purpose": "schema:task"
     },
+    "lib/README.md": {
+      "hash": "77fb1db93048362670140e97090249d43f6ca375f283e6354c1cb3482cb656e7",
+      "lines": 58,
+      "type": "doc",
+      "purpose": "doc:README"
+    },
+    "scripts/architecture/PROMPT.md": {
+      "hash": "13f80a53b42379263915cd9ce0dcf3fcba14cce9f25dc39206ad47bd513c38b9",
+      "lines": 127,
+      "type": "doc",
+      "purpose": "doc:PROMPT"
+    },
     "scripts/setup-github-project.sh": {
       "hash": "136b266e33eed2dbe90d4b9f9c1830cc071fc85c47902d1ae3536ca4c03913e8",
       "lines": 128,
@@ -170,9 +194,9 @@
   },
   "directories": {
     ".": {
-      "hash": "27ab64e2342329180183f207dda94565d3be9cee62ca34357868b5e88029c259",
-      "files": 4,
-      "dirs": 4
+      "hash": "9c4dcd2a7941e3d9dc2055d2ca626024d6d0bec2378e6d220509eb79723bbb47",
+      "files": 5,
+      "dirs": 5
     },
     "agents": {
       "hash": "4f3e191b3b506fbd94c2187c00681b26342d51221c4dd60f3df56b76105402ca",
@@ -180,8 +204,8 @@
       "dirs": 0
     },
     "docs/fetch": {
-      "hash": "e66169540182684fd8f58ad878c4b63ac6f161d58975bec1506064cb3bed9a53",
-      "files": 4,
+      "hash": "8ccafea563ddec3aaca950e39c63ccce3c703762527a729d7a8ac896caa8e946",
+      "files": 5,
       "dirs": 0
     },
     "docs/research": {
@@ -199,8 +223,18 @@
       "files": 2,
       "dirs": 0
     },
+    "lib": {
+      "hash": "a58d0063d196c0108a1ceb015d824d02ffd55f9eb2aeb6fa2ae7046875dbea81",
+      "files": 1,
+      "dirs": 0
+    },
     "scripts": {
       "hash": "4783784a3d1bc4293bcd069ec7f01be16fea8a7ec26458d0452124ea1fdb53a7",
+      "files": 1,
+      "dirs": 1
+    },
+    "scripts/architecture": {
+      "hash": "feb07135592aa2b5de45c90027d5d24348a7f1486dcbef784e8adf5deff80c5b",
       "files": 1,
       "dirs": 0
     },

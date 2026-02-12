@@ -15,9 +15,21 @@ pm/
 ├── .index/           # Merkle tree (O(1) change detection)
 ├── agents/           # VP Product → SDM → Staff Engineer → Sprint Master
 ├── entities/         # Epic → Story → Task → Subtask (Claude Code aligned)
+├── lib/              # Shared code (SINGLE SOURCE - import, don't duplicate)
 ├── docs/fetch/       # Fetched external docs
 ├── docs/research/    # Compiled research
-└── tests/            # Integration tests (5 passing)
+├── scripts/          # Automation (architecture generator)
+├── tests/            # Integration tests (5 passing)
+├── ARCHITECTURE.md   # Auto-generated system diagram
+└── ARCHITECTURE.html # Interactive visualization
+```
+
+## Organization Context (jadecli-ai)
+
+```
+jadecli-ai/                    # GitHub Organization
+├── pm/                        # This repo - PM System
+└── (future repos)             # Will share lib/ patterns
 ```
 
 ## Entry Checklist
@@ -127,12 +139,57 @@ dependedBy:
 python3 .index/check-changes.py      # Check if index stale
 python3 .index/generate-merkle.py    # Regenerate index
 
+# Architecture (auto-updates on PR merge)
+python scripts/architecture/generate.py  # Regenerate ARCHITECTURE.md/html
+
 # Testing
 ./tests/run-tests.sh                 # Run all tests (must pass)
 ./tests/validate-entity.sh <file>    # Validate single entity
 
 # Git
 git add <specific-files>             # Never git add -A
+```
+
+---
+
+## Architecture
+
+### Layers
+
+| Layer | Purpose | Location |
+|-------|---------|----------|
+| **Frontend** | Documentation, UI | `docs/` |
+| **Middleware** | Agents, orchestration | `agents/` |
+| **Backend** | Scripts, tests, lib | `lib/`, `tests/`, `scripts/` |
+| **Data** | Entities, index | `entities/`, `.index/` |
+
+### Auto-Update
+
+Architecture docs auto-regenerate on:
+- PR merge to main (`.github/workflows/architecture.yml`)
+- Push to main
+- Manual: `python scripts/architecture/generate.py`
+
+### Visualization
+
+Open `ARCHITECTURE.html` for interactive exploration with:
+- Layer filter buttons
+- Component details on click
+- Mermaid dependency graph
+- Status indicators
+
+### Code Reuse (lib/)
+
+**Single source of truth** - import from `lib/`, never duplicate:
+
+```python
+# ✓ Good
+from lib.frontmatter import parse_file
+from lib.validators import validate_entity
+
+# ✗ Bad - duplicating logic
+def parse_frontmatter(content):  # Don't do this
+    ...
 ```
 
 ---
