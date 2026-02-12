@@ -10,6 +10,7 @@ semver: minor
 
 from __future__ import annotations
 
+import asyncio
 from dataclasses import dataclass, field
 from typing import Protocol
 
@@ -80,29 +81,34 @@ class LiveSheetsClient:
         service = self._get_service()
         body = {"values": data}
 
-        result = (
-            service.spreadsheets()
-            .values()
-            .update(
-                spreadsheetId=sheet_range.sheet_id,
-                range=sheet_range.full_range,
-                valueInputOption="USER_ENTERED",
-                body=body,
+        def _execute() -> dict:
+            return (
+                service.spreadsheets()
+                .values()
+                .update(
+                    spreadsheetId=sheet_range.sheet_id,
+                    range=sheet_range.full_range,
+                    valueInputOption="USER_ENTERED",
+                    body=body,
+                )
+                .execute()
             )
-            .execute()
-        )
 
+        result = await asyncio.to_thread(_execute)
         return result.get("updatedRows", 0)
 
     async def clear_range(self, sheet_range: SheetRange) -> None:
         """Clear all data in the specified range."""
         service = self._get_service()
 
-        service.spreadsheets().values().clear(
-            spreadsheetId=sheet_range.sheet_id,
-            range=sheet_range.full_range,
-            body={},
-        ).execute()
+        def _execute() -> None:
+            service.spreadsheets().values().clear(
+                spreadsheetId=sheet_range.sheet_id,
+                range=sheet_range.full_range,
+                body={},
+            ).execute()
+
+        await asyncio.to_thread(_execute)
 
 
 @dataclass
