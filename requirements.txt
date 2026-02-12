@@ -1,0 +1,17 @@
+# Gemini/Kimi Agent Integration Requirements
+
+# Gemini SDK (Google Gen AI)
+google-genai>=1.0.0
+
+# Kimi Agent SDK (install when ready to test)
+# kimi-agent-sdk  # Uncomment when testing Kimi agents
+
+# MLflow for performance tracking
+mlflow>=2.10.0
+
+# Redis for coordination (optional)
+redis>=5.0.0
+
+# Additional utilities
+python-dotenv>=1.0.0  # For .env file support
+pydantic>=2.0.0  # For schema validation
