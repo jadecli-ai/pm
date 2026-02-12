@@ -1,0 +1,84 @@
+{
+  "timestamp": "2026-02-12T08:44:48.986457",
+  "gemini": {
+    "embeddings": {
+      "status": "\u2705 PASS",
+      "single_latency": "290ms",
+      "batch_latency": "598ms",
+      "search_latency": "1002ms",
+      "embedding_dim": 768,
+      "error": null
+    },
+    "structured_json": {
+      "status": "\u2705 PASS",
+      "latency": "4843ms",
+      "sample_output": "{'profile': {'name': 'Jane Doe', 'title': 'Senior Python Developer', 'location': 'San Francisco, CA'...",
+      "error": null
+    },
+    "thinking": {
+      "status": "\u26a0\ufe0f SKIP",
+      "latency": "N/A",
+      "error": "404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-2.0-flash-thinking-exp is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}"
+    },
+    "audio": {
+      "status": "\u23f8\ufe0f SKIP",
+      "reason": "No test audio file available",
+      "note": "Implementation ready, needs test audio file"
+    },
+    "code_execution": {
+      "status": "\u2705 PASS",
+      "latency": "612ms",
+      "model": "gemini-2.0-flash",
+      "output": "5050\n",
+      "error": null
+    }
+  },
+  "kimi": {
+    "sdk": {
+      "status": "\u2705 PASS",
+      "installed": true,
+      "error": null
+    },
+    "long_context": {
+      "status": "\u274c FAIL",
+      "latency": "N/A",
+      "error": "Error code: 401 - {'error': {'message': 'Invalid Authentication', 'type': 'invalid_authentication_error'}}"
+    },
+    "agent_swarm": {
+      "status": "\u23f8\ufe0f SKIP",
+      "reason": "Requires kimi-agent-sdk Session API",
+      "note": "SDK installed, but swarm features need deeper integration"
+    },
+    "vibe_coding": {
+      "status": "\u274c FAIL",
+      "error": "Error code: 401 - {'error': {'message': 'Invalid Authentication', 'type': 'invalid_authentication_error'}}"
+    }
+  },
+  "hybrid": {
+    "workflow": {
+      "status": "\u274c FAIL",
+      "error": "Error code: 401 - {'error': {'message': 'Invalid Authentication', 'type': 'invalid_authentication_error'}}"
+    },
+    "multimodal_benchmark": {
+      "status": "\u23f8\ufe0f SKIP",
+      "reason": "No test images/videos available",
+      "note": "Implementation ready in lib/gemini/multimodal.py"
+    },
+    "dashboard": {
+      "status": "\u2705 COMPLETE",
+      "dashboard": {
+        "total_runs": 14,
+        "avg_latency_ms": 240.94641208648682,
+        "success_rate": 35.714285714285715,
+        "mlflow_ui": "Run: mlflow ui --backend-store-uri ./mlruns"
+      }
+    }
+  },
+  "summary": {
+    "total": 12,
+    "passed": 4,
+    "failed": 3,
+    "skipped": 5,
+    "success_rate": "33.3%"
+  }
+}

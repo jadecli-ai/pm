@@ -3,8 +3,8 @@
 # Gemini SDK (Google Gen AI)
 google-genai>=1.0.0
 
-# Kimi Agent SDK (install when ready to test)
-# kimi-agent-sdk  # Uncomment when testing Kimi agents
+# Kimi Agent SDK
+kimi-agent-sdk>=0.1.0  # Now available - supports 256K context, agent swarm
 
 # MLflow for performance tracking
 mlflow>=2.10.0
