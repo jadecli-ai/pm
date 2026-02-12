@@ -1,0 +1,27 @@
+{
+  "name": "@jadecli-ai/backend-engineering",
+  "version": "1.0.0",
+  "description": "Backend services, APIs, and database operations",
+  "team": {
+    "name": "Backend Engineering",
+    "slug": "backend-engineering",
+    "lead": "backend-engineering-lead",
+    "members": [
+      "backend-engineering-engineer",
+      "backend-engineering-tester"
+    ],
+    "models": {
+      "lead": "claude-opus-4-5-20251101",
+      "engineer": "claude-sonnet-4-5-20250929",
+      "tester": "claude-haiku-3-5-20241022"
+    }
+  },
+  "steering": {
+    "token_budget": 160000,
+    "wrap_up_threshold": 0.8
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jadecli-ai/backend-engineering"
+  }
+}
