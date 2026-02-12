@@ -1,0 +1,35 @@
+SUBJECT LINE:
+jadecli-ai: Building Multi-Agent Orchestration for Claude Code
+
+EMAIL BODY:
+Hi Vercel Team,
+
+We're jadecli-ai, building Team Agents SDK—a multi-agent orchestration framework that turns Claude Code into a collaborative development environment. Think "GitHub Copilot meets agent teams": we enable developers to spawn, coordinate, and manage multiple Claude agents (Opus for architecture, Sonnet for implementation, Haiku for testing) working together on complex software projects.
+
+**What we've built so far:**
+- Multi-agent task queue with Redis-backed coordination
+- Real-time agent communication via FastMCP
+- 6-pane WezTerm grid for parallel agent visualization
+- PM system with VP Product → SDM → Staff Engineer hierarchy (agents managing agents)
+- Working prototype coordinating 8+ concurrent agents on real codebases
+
+**Why Vercel:**
+We need to deploy:
+1. **Agent Dashboard**: Real-time monitoring of agent teams, task flows, and token usage (Next.js + React)
+2. **API Gateway**: Serverless functions handling agent-to-agent communication, webhook routing, and Claude API proxying
+3. **Documentation Site**: Interactive docs with live agent examples
+4. **Marketplace**: Public registry for shareable agent workflows
+
+Vercel's Edge Network + Serverless Functions are perfect for handling unpredictable agent workloads—we've seen bursts of 50+ API calls/second during parallel agent research tasks. The $100K in credits would let us scale from prototype to production-ready platform.
+
+We're technical founders (ex-FAANG engineers) committed to the 6-week program and eager to showcase how Vercel powers the next generation of AI development tools.
+
+Best regards,
+The jadecli-ai Team
+https://github.com/jadecli-ai
+
+---
+SUBMISSION URL: https://vercel.com/ai-accelerator
+DEADLINE: February 16, 2026
+WORD COUNT: 237 words
+STATUS: Ready for submission
