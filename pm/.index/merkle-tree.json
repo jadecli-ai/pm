@@ -1,8 +1,32 @@
 {
   "version": "1.0.0",
-  "generated": "2026-02-11T18:24:38.475590",
-  "root": "db69c4aaba37a4603c6fe8492be7afbda912bc34b0c779188c838bd6bd943c49",
+  "generated": "2026-02-11T19:04:54.472318",
+  "root": "a67a99157aa2b84c360ac7905d05b084ce98bd9dfe565c878ba018d9223db172",
   "files": {
+    ".claude/commands/ask.md": {
+      "hash": "41a18678d4bf458e4b588620652ac3bbec789ee07c5a4ed33b0787b30f7ce5a8",
+      "lines": 159,
+      "type": "doc",
+      "purpose": "doc:ask"
+    },
+    ".claude/commands/pm.md": {
+      "hash": "90d3f3a60fa4a6cfae4e8e3cce95a486f9a97edce52a0dc17eec33c97f01e138",
+      "lines": 56,
+      "type": "doc",
+      "purpose": "doc:pm"
+    },
+    ".claude/skills/pm-atomic.md": {
+      "hash": "27fdc8ad5464fe38796920aa36d8592dc4eaf11d7a56b88e6846b0328ffde582",
+      "lines": 45,
+      "type": "doc",
+      "purpose": "doc:pm-atomic"
+    },
+    ".claude/skills/pm-workflow.md": {
+      "hash": "477bc5a3a2bf4e2baa45febe2c751cab20a486a5b126e08c16dd32c76717af4e",
+      "lines": 65,
+      "type": "doc",
+      "purpose": "doc:pm-workflow"
+    },
     "ARCHITECTURE.md": {
       "hash": "b583d4a53752402f2a978b520e01fed9e1213607e5595033de97ce38d29eeb7d",
       "lines": 117,
@@ -16,8 +40,8 @@
       "purpose": "doc:CHANGELOG"
     },
     "CLAUDE.md": {
-      "hash": "de88162ef60ef6c603e50cabb3ae3264009e739a6f829c11a7536c96806b20c9",
-      "lines": 298,
+      "hash": "6127b42557adab8a1bd43c8d67ed6d4bab3838e3ed687f3edbe411ec3743a3f2",
+      "lines": 324,
       "type": "doc",
       "purpose": "doc:CLAUDE"
     },
@@ -65,11 +89,29 @@
       "name": "vp-product",
       "model": "claude-opus-4-5-20250929"
     },
+    "docs/agent-teams-workarounds.md": {
+      "hash": "6a59bccb5758c84270a2eb8aff5f94ca1aac8957907207386187355822dd3662",
+      "lines": 288,
+      "type": "doc",
+      "purpose": "doc:agent-teams-workarounds"
+    },
     "docs/fetch/anthropic-engineering-patterns.md": {
       "hash": "127e7e1223ea50979523f700a8faa5a875f35b02fbb2a02dcc97c3463b8fd531",
       "lines": 81,
       "type": "doc",
       "purpose": "doc:anthropic-engineering-patterns"
+    },
+    "docs/fetch/anthropic-prompt-engineering.md": {
+      "hash": "d569e1894493d177101aebf3d41be4583dd6c86ff6c94736f22fdacd99a30b8a",
+      "lines": 121,
+      "type": "doc",
+      "purpose": "doc:anthropic-prompt-engineering"
+    },
+    "docs/fetch/anthropic-xml-tags.md": {
+      "hash": "72d8119403e15cff67f1bd2d27fb8f04e6c9a761017172aa2ca08a3d1dea0c55",
+      "lines": 117,
+      "type": "doc",
+      "purpose": "doc:anthropic-xml-tags"
     },
     "docs/fetch/claude-code-memory.md": {
       "hash": "4df57e870aa34ad750bd514b880fce156dfd2af19543fd9b58fbc692c010667f",
@@ -101,6 +143,12 @@
       "type": "doc",
       "purpose": "doc:claude-code-memory-system"
     },
+    "docs/research/prompt-engineering-guide.md": {
+      "hash": "ffc15609717a60d13ddd4ddb1074df8e34f1ed55f51cf279331071c9a366570f",
+      "lines": 293,
+      "type": "doc",
+      "purpose": "doc:prompt-engineering-guide"
+    },
     "entities/README.md": {
       "hash": "3de62584a07aee8855e4f0ac33681f0c4f6b6e549e9db7a83812c18d6fcfbdc9",
       "lines": 101,
@@ -130,6 +178,27 @@
       "id": "TASK-004",
       "version": "1.0.1",
       "status": "in_progress"
+    },
+    "entities/examples/TASK-005.md": {
+      "hash": "0afe2eab965771dffa484dfb3e4b035292703a4b0e1c89218d12a46d864437fc",
+      "lines": 156,
+      "type": "entity",
+      "purpose": "entity:task:TASK-005",
+      "id": "TASK-005",
+      "version": "1.0.0",
+      "status": "pending"
+    },
+    "entities/org-epic.schema.md": {
+      "hash": "1ee1d06785f9fdec6d80900ffe8eed3c52cd6159c23ee86c0ab85cb09a944cef",
+      "lines": 176,
+      "type": "schema",
+      "purpose": "schema:org-epic"
+    },
+    "entities/repo-sprint.schema.md": {
+      "hash": "d7453465a031d382a2b24bdeda0c9368db3ef1f1529f37be33b2ae85a970bb63",
+      "lines": 228,
+      "type": "schema",
+      "purpose": "schema:repo-sprint"
     },
     "entities/story.schema.md": {
       "hash": "02fabcbaac8f2727495a3a501d21bf80e9047427801ff18c9d99f9b1afe28afe",
@@ -194,33 +263,48 @@
   },
   "directories": {
     ".": {
-      "hash": "9c4dcd2a7941e3d9dc2055d2ca626024d6d0bec2378e6d220509eb79723bbb47",
+      "hash": "a019073161fdb5cf26e144509d3465a6879ef490a320801f9b7ad95806e9d530",
       "files": 5,
-      "dirs": 5
+      "dirs": 6
+    },
+    ".claude/commands": {
+      "hash": "601ee6d7f1026f2e700c74953fd8c153951abd8b8b68f821f6178f805b08bff8",
+      "files": 2,
+      "dirs": 0
+    },
+    ".claude/skills": {
+      "hash": "14b0eef771e02e77bae4c5030c6c0cb2d9878ffda87ebeafe8a7ef275e11117b",
+      "files": 2,
+      "dirs": 0
     },
     "agents": {
       "hash": "4f3e191b3b506fbd94c2187c00681b26342d51221c4dd60f3df56b76105402ca",
       "files": 4,
       "dirs": 0
     },
+    "docs": {
+      "hash": "b0761b53ad04e19c26a65a1078cc9706fe4ecd5fd50fc0337ea447266aef3462",
+      "files": 1,
+      "dirs": 2
+    },
     "docs/fetch": {
-      "hash": "8ccafea563ddec3aaca950e39c63ccce3c703762527a729d7a8ac896caa8e946",
-      "files": 5,
+      "hash": "8c7cd20f5d62fb9ae2d47e0814a28a0df6351af920edd5ccaff8a6fd80711bd7",
+      "files": 7,
       "dirs": 0
     },
     "docs/research": {
-      "hash": "2c7d79058613bc662f1d6e2b5662cba3922c3fcd634beb7f508ee64c9d774c0f",
-      "files": 1,
+      "hash": "a99c68bd7bacb23f5d1c24b307f67a4f08377532036221acf29ac2927bcfce0b",
+      "files": 2,
       "dirs": 0
     },
     "entities": {
-      "hash": "45cda976be0aa5475630b49dcbe8283e10c769680afd656283e4f4b84de0f0f3",
-      "files": 5,
+      "hash": "1ec693eee9042626a3a9a913a08f27db51a736ffca3edbaeb86a35fe1ef542ac",
+      "files": 7,
       "dirs": 1
     },
     "entities/examples": {
-      "hash": "1637d4ec02cff130ac56544f64b559f4642bf14ff6a60b01981086dfa0584536",
-      "files": 2,
+      "hash": "6d14f80b4fd1c531d4284d508d76aaa2505006e155007648727fefa72dec3b35",
+      "files": 3,
       "dirs": 0
     },
     "lib": {
