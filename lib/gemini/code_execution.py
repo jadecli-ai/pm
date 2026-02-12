@@ -28,9 +28,13 @@ class GeminiCodeExecutor:
         if not GENAI_AVAILABLE:
             raise ImportError("google-genai not installed")
 
-        api_key = os.getenv("GEMINI_API_KEY")
-        if not api_key:
-            raise ValueError("GEMINI_API_KEY not set")
+        # Import here to avoid circular imports
+        import sys
+        from pathlib import Path
+        sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+        from src.env_get import get_gemini_api_key
+
+        api_key = get_gemini_api_key()
 
         self.client = genai.Client(api_key=api_key)
         self.model_name = "gemini-2.0-flash"  # Verified working with API key

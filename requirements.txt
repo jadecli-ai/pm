@@ -12,6 +12,6 @@ mlflow>=2.10.0
 # Redis for coordination (optional)
 redis>=5.0.0
 
-# Additional utilities
-python-dotenv>=1.0.0  # For .env file support
+# Additional utilities (REQUIRED)
+python-dotenv>=1.0.0  # For .env file support (REQUIRED for API key loading)
 pydantic>=2.0.0  # For schema validation

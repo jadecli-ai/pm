@@ -28,9 +28,13 @@ class KimiLongContext:
     """Kimi 256K context window wrapper."""
 
     def __init__(self):
-        api_key = os.getenv("KIMI_API_KEY_v3") or os.getenv("KIMI_API_KEY")
-        if not api_key:
-            raise ValueError("KIMI_API_KEY_v3 or KIMI_API_KEY not set")
+        # Import here to avoid circular imports
+        import sys
+        from pathlib import Path
+        sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+        from src.env_get import get_kimi_api_key
+
+        api_key = get_kimi_api_key()
 
         self.api_key = api_key
         self.model_name = "kimi-k2.5"
