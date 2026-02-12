@@ -33,18 +33,18 @@ class GeminiCodeExecutor:
             raise ValueError("GEMINI_API_KEY not set")
 
         self.client = genai.Client(api_key=api_key)
-        self.model_name = "gemini-2.0-flash-exp"
+        self.model_name = "gemini-2.5-flash"  # Latest flash model (2026)
 
     def execute_code(self, code: str) -> ToolResult:
         """Execute Python code in Gemini sandbox."""
         start = time.time()
 
         try:
-            # Enable code execution
+            # Simple approach - just ask Gemini to execute code
+            # Note: Code execution is a beta feature, may not be available in all models
             response = self.client.models.generate_content(
                 model=self.model_name,
-                contents=f"Execute this Python code and show the output:\n```python\n{code}\n```",
-                config={"code_execution": {"enable": True}}
+                contents=f"Execute this Python code and show me only the output:\n```python\n{code}\n```"
             )
 
             latency = (time.time() - start) * 1000
