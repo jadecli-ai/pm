@@ -105,6 +105,66 @@ l3-full: ## L3: Full pipeline with release
 	@$(MAKE) -s l2-release
 
 # ============================================================================
+# REVIEW PIPELINE (automated code review)
+# ============================================================================
+
+.PHONY: review-l0-test review-l0-value review-l0-mlflow review-l1-parallel review-l2-full review-l3-implement review
+
+BRANCH ?= $(shell git branch --show-current 2>/dev/null || echo "main")
+COMMIT ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+BRANCH_SAFE = $(shell echo "$(BRANCH)" | tr '/' '-' | tr '[:upper:]' '[:lower:]')
+REVIEW_DIR = ../reviews/$(BRANCH_SAFE)
+
+review-l0-test: ## L0-Review: Run test reviewer only
+	@echo "▶ Test Reviewer: $(BRANCH) @ $(COMMIT)"
+	@mkdir -p $(REVIEW_DIR)
+	@echo "  Spawn test-reviewer agent..."
+	@echo "  Output: $(REVIEW_DIR)/REVIEW-test-$(COMMIT).md"
+
+review-l0-value: ## L0-Review: Run value reviewer only
+	@echo "▶ Value Reviewer: $(BRANCH) @ $(COMMIT)"
+	@mkdir -p $(REVIEW_DIR)
+	@echo "  Spawn value-reviewer agent..."
+	@echo "  Output: $(REVIEW_DIR)/REVIEW-value-$(COMMIT).md"
+
+review-l0-mlflow: ## L0-Review: Run MLflow analyzer only
+	@echo "▶ MLflow Analyzer: $(BRANCH) @ $(COMMIT)"
+	@mkdir -p $(REVIEW_DIR)
+	@echo "  Spawn mlflow-analyzer agent..."
+	@echo "  Output: $(REVIEW_DIR)/REVIEW-mlflow-$(COMMIT).md"
+
+review-l1-parallel: ## L1-Review: Run all 3 reviewers in parallel
+	@echo "▶ Parallel Review: $(BRANCH) @ $(COMMIT)"
+	@mkdir -p $(REVIEW_DIR)
+	@echo "  Spawning 3 Opus reviewers in parallel..."
+	@echo "  - test-reviewer"
+	@echo "  - value-reviewer"
+	@echo "  - mlflow-analyzer"
+
+review-l2-full: ## L2-Review: Full pipeline (review + synthesis + tasks)
+	@echo "═══ Review Pipeline L2: $(BRANCH) @ $(COMMIT) ═══"
+	@mkdir -p $(REVIEW_DIR)
+	@$(MAKE) -s review-l1-parallel
+	@echo ""
+	@echo "▶ Synthesis Phase"
+	@echo "  Spawn review-synthesizer..."
+	@echo "  Output: $(REVIEW_DIR)/summary.json"
+	@echo "  Tasks: entities/examples/TASK-*.md"
+
+review-l3-implement: ## L3-Review: Full pipeline + parallel implementation
+	@echo "═══ Review Pipeline L3: $(BRANCH) @ $(COMMIT) ═══"
+	@$(MAKE) -s review-l2-full
+	@echo ""
+	@echo "▶ Assignment Phase"
+	@echo "  Spawn assignment-manager..."
+	@echo "  Output: $(REVIEW_DIR)/assignments.json"
+	@echo ""
+	@echo "▶ Implementation Phase"
+	@echo "  Spawning Staff Engineers based on assignments..."
+
+review: review-l2-full ## Alias: Full review pipeline (L2)
+
+# ============================================================================
 # SHORTCUTS (ergonomic aliases)
 # ============================================================================
 
@@ -137,5 +197,8 @@ help: ## Show this help
 	@echo "Level 3 (Pipeline):"
 	@grep -E '^l3-[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/'
 	@echo ""
+	@echo "Review Pipeline:"
+	@grep -E '^review-l[0-3]-[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/'
+	@echo ""
 	@echo "Shortcuts:"
-	@grep -E '^(test|index|arch|validate|check|ci|cd):.*##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/'
+	@grep -E '^(test|index|arch|validate|check|ci|cd|review):.*##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/'
