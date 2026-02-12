@@ -26,6 +26,9 @@ dev = [
     "pyright>=1.1.380",
 ]
 
+[tool.hatch.build.targets.wheel]
+packages = ["pm/lib/neon_docs"]
+
 [tool.ruff]
 line-length = 120
 target-version = "py311"
