@@ -85,6 +85,81 @@ Before submitting PR:
 - Rust 1.75+
 - Docker 24+
 
+## Steering System
+
+### Budget-Aware Agent Execution
+
+Agents track token/turn consumption and hand off context when approaching limits.
+
+**Budget Calculation**:
+```
+budget_ratio = max(
+  current_turn / max_turns,        # Turn-based (e.g., 20/25 = 0.80)
+  tokens_consumed / token_budget   # Token-based (e.g., 160K/200K = 0.80)
+)
+```
+
+### Token/Turn Budgets
+
+| Model | Context | Budget | Default Turns |
+|-------|---------|--------|---------------|
+| Opus 4.5 | 200K | 160K working | 25 |
+| Sonnet 4.5 | 200K | 160K working | 15 |
+| Haiku 3.5 | 200K | 160K working | 10 |
+
+### Wrap-up Protocol
+
+| Phase | Threshold | Action |
+|-------|-----------|--------|
+| Normal | < 70% | Continue exploration |
+| Warning | 70-79% | Prioritize critical items |
+| Wrap-up | 80-89% | Stop new work, synthesize |
+| Critical | 90%+ | Immediate handoff |
+
+At 80% budget (`budget_ratio >= 0.80`):
+1. Stop new exploration
+2. Synthesize findings
+3. Document incomplete items
+4. Generate `<handoff>` YAML block
+
+### Handoff Document Format
+
+```yaml
+<handoff>
+reason: "budget_wrap_up_80_percent"
+completed:
+  - "Completed item 1"
+incomplete:
+  - "Remaining item 1"
+context:
+  active_entities:
+    epic: "ORG-EPIC-XXX"
+    task: "TASK-XXX"
+  key_files:
+    - "/path/to/file"
+  decisions:
+    - "Key decision"
+successor:
+  agent: "staff-engineer"
+  prompt_hint: "Continue from..."
+metrics:
+  turns_used: 20
+  budget_ratio: 0.80
+</handoff>
+```
+
+### Chain Decisions
+
+**Continue**: Incomplete items exist AND successor available
+**Terminate**: All work complete OR acceptance criteria met
+
+### Steering Configuration
+
+- `steering/config/budgets.yaml` - Token/turn limits by model
+- `steering/config/thresholds.yaml` - Wrap-up thresholds
+- `steering/lib/budget_tracker.py` - Budget tracking
+- `steering/lib/handoff_generator.py` - Handoff generation
+
 ## Agent Teams
 
 ### Standard Team Structure
