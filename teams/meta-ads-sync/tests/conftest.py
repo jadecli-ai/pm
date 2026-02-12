@@ -12,11 +12,11 @@ semver: patch
 
 from __future__ import annotations
 
-import os
 from datetime import date, timedelta
 
 import pytest
 
+from lib.get_env import env
 from lib.meta_client import MockMetaAdsClient
 from lib.sheets_client import MockSheetsClient, SheetRange
 
@@ -69,22 +69,22 @@ def sample_sheet_range(sample_sheet_id: str) -> SheetRange:
 @pytest.fixture
 def has_meta_credentials() -> bool:
     """Check if Meta API credentials are available."""
-    return bool(os.environ.get("META_ACCESS_TOKEN"))
+    return env("META_ACCESS_TOKEN", default=None) is not None
 
 
 @pytest.fixture
 def has_sheets_credentials() -> bool:
     """Check if Google Sheets credentials are available."""
-    return bool(os.environ.get("GOOGLE_SHEETS_CREDENTIALS_JSON"))
+    return env("GOOGLE_SHEETS_CREDENTIALS_JSON", default=None) is not None
 
 
 @pytest.fixture
 def live_campaign_id() -> str | None:
     """Get test campaign ID from env, or None if not set."""
-    return os.environ.get("META_TEST_CAMPAIGN_ID")
+    return env("META_TEST_CAMPAIGN_ID", default=None)
 
 
 @pytest.fixture
 def live_sheet_id() -> str | None:
     """Get test sheet ID from env, or None if not set."""
-    return os.environ.get("GOOGLE_SHEET_ID")
+    return env("GOOGLE_SHEET_ID", default=None)

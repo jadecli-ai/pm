@@ -9,11 +9,11 @@ semver: patch
 
 from __future__ import annotations
 
-import os
 from datetime import date, timedelta
 
 import pytest
 
+from lib.get_env import env
 from lib.meta_client import (
     DailySpend,
     LiveMetaAdsClient,
@@ -151,31 +151,22 @@ class TestGetMetaClient:
         client = get_meta_client(use_mock=True)
         assert isinstance(client, MockMetaAdsClient)
 
-    def test_returns_live_when_not_mock(self) -> None:
+    def test_returns_live_when_not_mock(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """get_meta_client returns LiveMetaAdsClient when use_mock=False."""
-        # Set a dummy token to avoid KeyError
-        original = os.environ.get("META_ACCESS_TOKEN")
-        os.environ["META_ACCESS_TOKEN"] = "test_token"
-
-        try:
-            client = get_meta_client(use_mock=False)
-            assert isinstance(client, LiveMetaAdsClient)
-        finally:
-            if original:
-                os.environ["META_ACCESS_TOKEN"] = original
-            else:
-                os.environ.pop("META_ACCESS_TOKEN", None)
+        monkeypatch.setenv("META_ACCESS_TOKEN", "test_token")
+        client = get_meta_client(use_mock=False)
+        assert isinstance(client, LiveMetaAdsClient)
 
 
 # Live tests - only run when credentials are available
 
 
 @pytest.mark.skipif(
-    not os.environ.get("META_ACCESS_TOKEN"),
+    env("META_ACCESS_TOKEN", default=None) is None,
     reason="META_ACCESS_TOKEN not set",
 )
 @pytest.mark.skipif(
-    not os.environ.get("META_TEST_CAMPAIGN_ID"),
+    env("META_TEST_CAMPAIGN_ID", default=None) is None,
     reason="META_TEST_CAMPAIGN_ID not set",
 )
 class TestLiveMetaAdsClient:
@@ -184,7 +175,7 @@ class TestLiveMetaAdsClient:
     @pytest.mark.asyncio
     async def test_live_fetch(self) -> None:
         """Fetch real data from Meta Ads API."""
-        campaign_id = os.environ["META_TEST_CAMPAIGN_ID"]
+        campaign_id = env("META_TEST_CAMPAIGN_ID")
         end_date = date.today() - timedelta(days=1)
         start_date = end_date - timedelta(days=6)
 

@@ -9,10 +9,9 @@ semver: patch
 
 from __future__ import annotations
 
-import os
-
 import pytest
 
+from lib.get_env import env
 from lib.sheets_client import (
     LiveSheetsClient,
     MockSheetsClient,
@@ -135,31 +134,22 @@ class TestGetSheetsClient:
         client = get_sheets_client(use_mock=True)
         assert isinstance(client, MockSheetsClient)
 
-    def test_returns_live_when_not_mock(self) -> None:
+    def test_returns_live_when_not_mock(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """get_sheets_client returns LiveSheetsClient when use_mock=False."""
-        # Set a dummy path to avoid KeyError
-        original = os.environ.get("GOOGLE_SHEETS_CREDENTIALS_JSON")
-        os.environ["GOOGLE_SHEETS_CREDENTIALS_JSON"] = "/tmp/test_creds.json"
-
-        try:
-            client = get_sheets_client(use_mock=False)
-            assert isinstance(client, LiveSheetsClient)
-        finally:
-            if original:
-                os.environ["GOOGLE_SHEETS_CREDENTIALS_JSON"] = original
-            else:
-                os.environ.pop("GOOGLE_SHEETS_CREDENTIALS_JSON", None)
+        monkeypatch.setenv("GOOGLE_SHEETS_CREDENTIALS_JSON", "/tmp/test_creds.json")
+        client = get_sheets_client(use_mock=False)
+        assert isinstance(client, LiveSheetsClient)
 
 
 # Live tests - only run when credentials are available
 
 
 @pytest.mark.skipif(
-    not os.environ.get("GOOGLE_SHEETS_CREDENTIALS_JSON"),
+    env("GOOGLE_SHEETS_CREDENTIALS_JSON", default=None) is None,
     reason="GOOGLE_SHEETS_CREDENTIALS_JSON not set",
 )
 @pytest.mark.skipif(
-    not os.environ.get("GOOGLE_SHEET_ID"),
+    env("GOOGLE_SHEET_ID", default=None) is None,
     reason="GOOGLE_SHEET_ID not set",
 )
 class TestLiveSheetsClient:
@@ -168,7 +158,7 @@ class TestLiveSheetsClient:
     @pytest.mark.asyncio
     async def test_live_write_and_clear(self) -> None:
         """Write and clear data in a real Google Sheet."""
-        sheet_id = os.environ["GOOGLE_SHEET_ID"]
+        sheet_id = env("GOOGLE_SHEET_ID")
         sheet_range = SheetRange(
             sheet_id=sheet_id,
             sheet_name="Test Sheet",
