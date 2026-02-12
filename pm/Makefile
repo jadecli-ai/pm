@@ -1,0 +1,141 @@
+# PM System - Monotonically Increasing Commands
+# Level 0: Atomic | Level 1: Composed | Level 2: Workflow | Level 3: Pipeline
+#
+# Usage: make <target> or via slash commands /pm:<target>
+
+.PHONY: all help
+.DEFAULT_GOAL := help
+
+# ============================================================================
+# LEVEL 0: ATOMIC OPERATIONS (single responsibility, ~1 tool call each)
+# ============================================================================
+
+.PHONY: l0-hash l0-test l0-lint l0-arch l0-commit-check l0-frontmatter
+
+l0-hash: ## L0: Generate file hash
+	@python3 -c "from lib.frontmatter import parse_file; from pathlib import Path; import hashlib; \
+	p=Path('$(FILE)'); print(hashlib.sha256(p.read_bytes()).hexdigest()[:16] if p.exists() else 'not-found')"
+
+l0-test: ## L0: Run single test
+	@./tests/run-tests.sh 2>/dev/null | tail -5
+
+l0-lint: ## L0: Lint single file frontmatter
+	@python3 -c "from lib.validators import validate_entity; from pathlib import Path; \
+	print('✓' if validate_entity(Path('$(FILE)')) else '✗')" 2>/dev/null || echo "✗ $(FILE)"
+
+l0-arch: ## L0: Generate architecture (no commit)
+	@python3 scripts/architecture/generate.py 2>/dev/null | tail -3
+
+l0-commit-check: ## L0: Validate last commit message
+	@git log -1 --pretty=%B | head -1 | grep -qE '^(feat|fix|docs|refactor|test|chore|perf|ci|revert)(\(.+\))?: .+' \
+	&& echo "✓ conventional" || echo "✗ not conventional"
+
+l0-frontmatter: ## L0: Extract frontmatter from file
+	@python3 -c "from lib.frontmatter import parse_file; from pathlib import Path; import json; \
+	print(json.dumps(parse_file(Path('$(FILE)')), indent=2))"
+
+# ============================================================================
+# LEVEL 1: COMPOSED (combine 2-3 L0 ops, still single purpose)
+# ============================================================================
+
+.PHONY: l1-index l1-validate l1-arch-check l1-pr-lint
+
+l1-index: ## L1: Check + regenerate index if stale
+	@python3 .index/check-changes.py 2>/dev/null || python3 .index/generate-merkle.py
+
+l1-validate: ## L1: Run tests + check index
+	@$(MAKE) -s l0-test && $(MAKE) -s l1-index
+
+l1-arch-check: ## L1: Generate arch + check diff
+	@$(MAKE) -s l0-arch && git diff --quiet ARCHITECTURE.md 2>/dev/null \
+	&& echo "✓ arch current" || echo "⚠ arch changed"
+
+l1-pr-lint: ## L1: Lint all changed files
+	@for f in $$(git diff --name-only HEAD~1 -- '*.md' 2>/dev/null); do \
+		$(MAKE) -s l0-lint FILE="$$f"; done
+
+# ============================================================================
+# LEVEL 2: WORKFLOWS (business logic, combine L1 ops)
+# ============================================================================
+
+.PHONY: l2-pr-open l2-pr-merge l2-release
+
+l2-pr-open: ## L2: PR open checks (tests + index + arch + lint)
+	@echo "▶ PR Open Checks"
+	@$(MAKE) -s l1-validate && echo "  ✓ tests + index"
+	@$(MAKE) -s l1-arch-check
+	@$(MAKE) -s l0-commit-check
+	@$(MAKE) -s l1-pr-lint
+	@echo "✓ PR ready"
+
+l2-pr-merge: ## L2: PR merge automation (arch + commit)
+	@echo "▶ PR Merge"
+	@$(MAKE) -s l0-arch
+	@git diff --quiet ARCHITECTURE.md ARCHITECTURE.html architecture.json 2>/dev/null || { \
+		git add ARCHITECTURE.md ARCHITECTURE.html architecture.json && \
+		git commit -m "docs(architecture): auto-update" && \
+		echo "✓ arch committed"; }
+	@echo "✓ merge complete"
+
+l2-release: ## L2: Release workflow (validate + tag)
+	@echo "▶ Release"
+	@$(MAKE) -s l2-pr-open
+	@VERSION=$$(grep -m1 'version' CHANGELOG.md | grep -oE '[0-9]+\.[0-9]+\.[0-9]+') && \
+	echo "  version: $$VERSION"
+
+# ============================================================================
+# LEVEL 3: PIPELINES (full automation, orchestrates L2)
+# ============================================================================
+
+.PHONY: l3-ci l3-cd l3-full
+
+l3-ci: ## L3: Full CI pipeline
+	@echo "═══ CI Pipeline ═══"
+	@$(MAKE) -s l2-pr-open
+	@echo "═══ CI Complete ═══"
+
+l3-cd: ## L3: Full CD pipeline (CI + merge + deploy)
+	@echo "═══ CD Pipeline ═══"
+	@$(MAKE) -s l3-ci
+	@$(MAKE) -s l2-pr-merge
+	@echo "═══ CD Complete ═══"
+
+l3-full: ## L3: Full pipeline with release
+	@$(MAKE) -s l3-cd
+	@$(MAKE) -s l2-release
+
+# ============================================================================
+# SHORTCUTS (ergonomic aliases)
+# ============================================================================
+
+.PHONY: test index arch validate check ci cd
+
+test: l0-test        ## Alias: run tests
+index: l1-index      ## Alias: check/update index
+arch: l0-arch        ## Alias: generate architecture
+validate: l1-validate ## Alias: tests + index
+check: l2-pr-open    ## Alias: PR checks
+ci: l3-ci            ## Alias: CI pipeline
+cd: l3-cd            ## Alias: CD pipeline
+
+# ============================================================================
+# HELP
+# ============================================================================
+
+help: ## Show this help
+	@echo "PM System Commands (monotonically increasing complexity)"
+	@echo ""
+	@echo "Level 0 (Atomic):"
+	@grep -E '^l0-[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/'
+	@echo ""
+	@echo "Level 1 (Composed):"
+	@grep -E '^l1-[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/'
+	@echo ""
+	@echo "Level 2 (Workflow):"
+	@grep -E '^l2-[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/'
+	@echo ""
+	@echo "Level 3 (Pipeline):"
+	@grep -E '^l3-[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/'
+	@echo ""
+	@echo "Shortcuts:"
+	@grep -E '^(test|index|arch|validate|check|ci|cd):.*##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/'

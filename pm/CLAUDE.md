@@ -134,20 +134,46 @@ dependedBy:
 
 ## Commands Reference
 
+Use monotonically increasing complexity levels:
+
 ```bash
-# Index Management
-python3 .index/check-changes.py      # Check if index stale
-python3 .index/generate-merkle.py    # Regenerate index
+# Level 0: Atomic (~50 tokens, <1s)
+make l0-test                    # Run tests
+make l0-arch                    # Generate architecture
+make l0-lint FILE=<path>        # Lint frontmatter
+make l0-commit-check            # Validate commit
 
-# Architecture (auto-updates on PR merge)
-python scripts/architecture/generate.py  # Regenerate ARCHITECTURE.md/html
+# Level 1: Composed (~60 tokens, <2s)
+make l1-index                   # Check + regen index if stale
+make l1-validate                # Tests + index
+make l1-arch-check              # Arch + diff
 
-# Testing
-./tests/run-tests.sh                 # Run all tests (must pass)
-./tests/validate-entity.sh <file>    # Validate single entity
+# Level 2: Workflow (~150 tokens, <5s)
+make l2-pr-open                 # Full PR checks
+make l2-pr-merge                # Merge automation
 
-# Git
-git add <specific-files>             # Never git add -A
+# Level 3: Pipeline (~300 tokens, <10s)
+make l3-ci                      # Full CI
+make l3-cd                      # CI + merge
+
+# Shortcuts
+make test | make ci | make check
+```
+
+### Slash Commands
+
+```
+/pm test          # L0: Run tests
+/pm check         # L2: PR open checks
+/pm ci            # L3: Full CI pipeline
+```
+
+### Agent SDK
+
+```python
+from lib.tools import PMTools
+tools = PMTools()
+result = tools.l2_pr_open()  # Returns ToolResult
 ```
 
 ---
