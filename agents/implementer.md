@@ -1,7 +1,7 @@
 ---
 name: implementer
 description: Implementation agent for feature development
-model: claude-sonnet-4-5-20250929
+model: claude-opus-4-6
 memory: local
 tools:
   - Read

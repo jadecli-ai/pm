@@ -1,7 +1,7 @@
 ---
 name: staff-engineer
 description: Staff Engineer - executes implementation tasks with high quality
-model: claude-sonnet-4-5-20250929
+model: claude-opus-4-6
 memory: project
 tools:
   - Read

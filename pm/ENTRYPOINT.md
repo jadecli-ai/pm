@@ -20,7 +20,7 @@ Review backlog and assign work.
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                  VP Product (Opus 4.5)                  │
+│                  VP Product (Opus 4.6)                  │
 │         Roadmap • Prioritization • Coordination         │
 └─────────────────────────────────────────────────────────┘
                             │
@@ -28,7 +28,7 @@ Review backlog and assign work.
         ▼                   ▼                   ▼
 ┌───────────────┐   ┌───────────────┐   ┌───────────────┐
 │ SDM Frontend  │   │ SDM Backend   │   │ SDM Infra     │
-│   (Sonnet)    │   │   (Sonnet)    │   │   (Sonnet)    │
+│  (Opus 4.6)   │   │  (Opus 4.6)   │   │  (Opus 4.6)   │
 └───────────────┘   └───────────────┘   └───────────────┘
         │                   │                   │
    ┌────┼────┐         ┌────┼────┐         ┌────┼────┐
@@ -36,11 +36,11 @@ Review backlog and assign work.
  ┌───┐┌───┐┌───┐     ┌───┐┌───┐┌───┐     ┌───┐┌───┐┌───┐
  │SE1││SE2││SE3│     │SE1││SE2││SE3│     │SE1││SE2││SE3│
  └───┘└───┘└───┘     └───┘└───┘└───┘     └───┘└───┘└───┘
-   Staff Engineers (Sonnet) - 9 total across domains
+   Staff Engineers (Opus 4.6) - 9 total across domains
 
                     ┌───────────────┐
                     │ Sprint Master │
-                    │   (Haiku)     │
+                    │  (Opus 4.6)   │
                     │ Coordinates   │
                     └───────────────┘
 ```
@@ -80,10 +80,10 @@ Sprint Master: "Facilitate demo, run retrospective"
 
 | Role | Model | Concurrent | Hours/Day | Agent-Hours/Week |
 |------|-------|------------|-----------|------------------|
-| VP PM | Opus | 1 | 2 | 10 |
-| SDM × 3 | Sonnet | 3 | 4 | 60 |
-| Staff Eng × 9 | Sonnet | 6* | 8 | 240 |
-| Sprint Master | Haiku | 1 | 1 | 5 |
+| VP PM | Opus 4.6 | 1 | 2 | 10 |
+| SDM × 3 | Opus 4.6 | 3 | 4 | 60 |
+| Staff Eng × 9 | Opus 4.6 | 6* | 8 | 240 |
+| Sprint Master | Opus 4.6 | 1 | 1 | 5 |
 
 *6 concurrent due to WezTerm 6-pane grid
 

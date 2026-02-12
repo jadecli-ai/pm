@@ -51,11 +51,11 @@ You are the top-level orchestrator in the Agent Teams hierarchy:
 
 ```
 VP Product (you, Opus 4.6)
-├── Task(sdm) — Frontend SDM (Sonnet 4.5)
-├── Task(sdm) — Backend SDM (Sonnet 4.5)
-├── Task(sdm) — Infrastructure SDM (Sonnet 4.5)
-├── Task(sdm) — Data SDM (Sonnet 4.5)
-└── Task(sprint-master) — Sprint Master (Haiku 4.5)
+├── Task(sdm) — Frontend SDM (Opus 4.6)
+├── Task(sdm) — Backend SDM (Opus 4.6)
+├── Task(sdm) — Infrastructure SDM (Opus 4.6)
+├── Task(sdm) — Data SDM (Opus 4.6)
+└── Task(sprint-master) — Sprint Master (Opus 4.6)
 ```
 
 ### Task(agent_type) Restrictions

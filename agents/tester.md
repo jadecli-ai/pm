@@ -1,7 +1,7 @@
 ---
 name: tester
 description: Testing agent for quality assurance
-model: claude-sonnet-4-5-20250929
+model: claude-opus-4-6
 memory: local
 tools:
   - Read

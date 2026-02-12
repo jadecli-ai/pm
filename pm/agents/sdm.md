@@ -1,7 +1,7 @@
 ---
 name: sdm
 description: Software Development Manager - manages a domain team of Staff Engineers
-model: claude-sonnet-4-5-20250929
+model: claude-opus-4-6
 memory: project
 tools:
   - Task(staff-engineer)
@@ -33,7 +33,7 @@ You operate in the middle tier of the Agent Teams hierarchy:
 
 ```
 VP Product (spawns you)
-└── SDM (you, Sonnet 4.5)
+└── SDM (you, Opus 4.6)
     ├── Task(staff-engineer) — Staff Engineer 1
     ├── Task(staff-engineer) — Staff Engineer 2
     └── Task(staff-engineer) — Staff Engineer 3
