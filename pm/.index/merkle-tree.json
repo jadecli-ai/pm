@@ -1,8 +1,20 @@
 {
   "version": "1.0.0",
-  "generated": "2026-02-11T18:07:55.317359",
-  "root": "0eb4327a0168f9df0e479762f3782406297a700dbbc260160dfb036e9bcc3dff",
+  "generated": "2026-02-11T18:17:16.087908",
+  "root": "763526223fc0ebdaa93bbb3dbbf9e3b03055ecd4fac4616e14a3eb05c5fddcc2",
   "files": {
+    "CHANGELOG.md": {
+      "hash": "b855f1e64d4a2559df44d593b4f9cde4f28000b11db54fac86024c00e5d0edb7",
+      "lines": 56,
+      "type": "doc",
+      "purpose": "doc:CHANGELOG"
+    },
+    "CLAUDE.md": {
+      "hash": "9b0dc25bb06f720eb5980a16a7086fdfb1e98756d51a1b983b046d24d7bf6130",
+      "lines": 241,
+      "type": "doc",
+      "purpose": "doc:CLAUDE"
+    },
     "ENTRYPOINT.md": {
       "hash": "5c4dccefd9d1fd223749a2c54b1682700bac1d8defa56d2e55758453453b6c61",
       "lines": 191,
@@ -16,8 +28,8 @@
       "purpose": "doc:README"
     },
     "agents/sdm.md": {
-      "hash": "46f6ded5fe849a4d3e9ad6bd3dee254d78ccc23100e6c728bf8dac379409bdfe",
-      "lines": 117,
+      "hash": "4c3186c7f84d178eaa933c0c595bd50722edd14d65db28932d1e6f81d2b7bfaf",
+      "lines": 118,
       "type": "agent",
       "purpose": "agent:sdm:claude-sonnet-4-5-20250929",
       "name": "sdm",
@@ -32,16 +44,16 @@
       "model": "haiku"
     },
     "agents/staff-engineer.md": {
-      "hash": "e51b28426ebea96425d8de418b736e08df361f6cd593db9e642feaf2c9d096dc",
-      "lines": 114,
+      "hash": "51f9caeda52894fdc5a8fed96db57cb750a8b80d90ae5ce181dd7215f913bdc3",
+      "lines": 115,
       "type": "agent",
       "purpose": "agent:staff-engineer:claude-sonnet-4-5-20250929",
       "name": "staff-engineer",
       "model": "claude-sonnet-4-5-20250929"
     },
     "agents/vp-product.md": {
-      "hash": "12353fa6848b3dd5554c40803fcf4f8e590600be8f87fd9da6a4e76f7c00319f",
-      "lines": 110,
+      "hash": "10ccf13bacfacd6eb97dc941b5aaa13c02850e3fcefe667b161f7ff84084524f",
+      "lines": 111,
       "type": "agent",
       "purpose": "agent:vp-product:claude-opus-4-5-20250929",
       "name": "vp-product",
@@ -158,12 +170,12 @@
   },
   "directories": {
     ".": {
-      "hash": "e80ccf3279119ceb026fc4cba0eb2cbb7ecfc9b45d570bf9fd527e23d532d260",
-      "files": 2,
+      "hash": "27ab64e2342329180183f207dda94565d3be9cee62ca34357868b5e88029c259",
+      "files": 4,
       "dirs": 4
     },
     "agents": {
-      "hash": "1ce2b4e4b6e14962d18edc8ac4067e4fc57f8e87c96e2630b4297c6bd6be92e6",
+      "hash": "4f3e191b3b506fbd94c2187c00681b26342d51221c4dd60f3df56b76105402ca",
       "files": 4,
       "dirs": 0
     },
