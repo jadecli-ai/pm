@@ -1,0 +1,69 @@
+# Token/Turn Budgets by Model
+#
+# Budget calculation:
+#   budget_ratio = max(
+#     current_turn / max_turns,        # Turn-based (e.g., 20/25 = 0.80)
+#     tokens_consumed / token_budget   # Token-based (e.g., 160K/200K = 0.80)
+#   )
+#
+# Working budget is ~80% of context window to leave room for output.
+
+models:
+  claude-opus-4-5-20251101:
+    context_window: 200000
+    token_budget: 160000      # 80% of context
+    default_turns: 25
+    cost_per_1k_input: 0.015
+    cost_per_1k_output: 0.075
+    extended_thinking: true
+    notes: "Deep research, complex planning, extended thinking"
+
+  claude-sonnet-4-5-20250929:
+    context_window: 200000
+    token_budget: 160000
+    default_turns: 15
+    cost_per_1k_input: 0.003
+    cost_per_1k_output: 0.015
+    extended_thinking: false
+    notes: "Implementation, code writing, testing"
+
+  claude-sonnet-4-20250514:
+    context_window: 200000
+    token_budget: 160000
+    default_turns: 15
+    cost_per_1k_input: 0.003
+    cost_per_1k_output: 0.015
+    extended_thinking: false
+    notes: "Legacy sonnet, prefer 4.5"
+
+  claude-haiku-3-5-20241022:
+    context_window: 200000
+    token_budget: 160000
+    default_turns: 10
+    cost_per_1k_input: 0.0008
+    cost_per_1k_output: 0.004
+    extended_thinking: false
+    notes: "Coordination, quick tasks, low-complexity work"
+
+# Agent role defaults
+roles:
+  lead:
+    model: claude-opus-4-5-20251101
+    max_turns: 25
+    notes: "VP Product, org-level planning"
+
+  senior:
+    model: claude-sonnet-4-5-20250929
+    max_turns: 15
+    notes: "SDM, Staff Engineer"
+
+  coordinator:
+    model: claude-haiku-3-5-20241022
+    max_turns: 10
+    notes: "Sprint Master, task coordination"
+
+  researcher:
+    model: claude-opus-4-5-20251101
+    max_turns: 30
+    extended_thinking: true
+    notes: "Deep research requiring extended thinking"
