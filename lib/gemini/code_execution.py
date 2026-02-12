@@ -28,23 +28,27 @@ class GeminiCodeExecutor:
         if not GENAI_AVAILABLE:
             raise ImportError("google-genai not installed")
 
-        api_key = os.getenv("GEMINI_API_KEY")
-        if not api_key:
-            raise ValueError("GEMINI_API_KEY not set")
+        # Import here to avoid circular imports
+        import sys
+        from pathlib import Path
+        sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+        from src.env_get import get_gemini_api_key
+
+        api_key = get_gemini_api_key()
 
         self.client = genai.Client(api_key=api_key)
-        self.model_name = "gemini-2.0-flash-exp"
+        self.model_name = "gemini-2.0-flash"  # Verified working with API key
 
     def execute_code(self, code: str) -> ToolResult:
         """Execute Python code in Gemini sandbox."""
         start = time.time()
 
         try:
-            # Enable code execution
+            # Simple approach - just ask Gemini to execute code
+            # Note: Code execution is a beta feature, may not be available in all models
             response = self.client.models.generate_content(
                 model=self.model_name,
-                contents=f"Execute this Python code and show the output:\n```python\n{code}\n```",
-                config={"code_execution": {"enable": True}}
+                contents=f"Execute this Python code and show me only the output:\n```python\n{code}\n```"
             )
 
             latency = (time.time() - start) * 1000

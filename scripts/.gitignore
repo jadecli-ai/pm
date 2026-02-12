@@ -1,0 +1,16 @@
+# Google Workspace credentials and config
+google_workspace_config.py
+*-sa-key.json
+*.json
+!google_workspace_config.example.py
+
+# Generated files
+groups_example.csv
+*.csv
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python

@@ -3,8 +3,8 @@
 # Gemini SDK (Google Gen AI)
 google-genai>=1.0.0
 
-# Kimi Agent SDK (install when ready to test)
-# kimi-agent-sdk  # Uncomment when testing Kimi agents
+# Kimi Agent SDK
+kimi-agent-sdk>=0.1.0  # Now available - supports 256K context, agent swarm
 
 # MLflow for performance tracking
 mlflow>=2.10.0
@@ -12,6 +12,6 @@ mlflow>=2.10.0
 # Redis for coordination (optional)
 redis>=5.0.0
 
-# Additional utilities
-python-dotenv>=1.0.0  # For .env file support
+# Additional utilities (REQUIRED)
+python-dotenv>=1.0.0  # For .env file support (REQUIRED for API key loading)
 pydantic>=2.0.0  # For schema validation
