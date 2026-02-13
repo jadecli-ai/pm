@@ -1,0 +1,16 @@
+name: Lint
+on:
+  push:
+    paths: ['pm/lib/neon_docs/**', 'pm/tests/neon_docs/**']
+  pull_request:
+    paths: ['pm/lib/neon_docs/**', 'pm/tests/neon_docs/**']
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
+      - run: uv venv .venv && uv pip install ruff
+      - run: .venv/bin/ruff check pm/lib/neon_docs/ pm/tests/neon_docs/
+      - run: .venv/bin/ruff format --check pm/lib/neon_docs/ pm/tests/neon_docs/
