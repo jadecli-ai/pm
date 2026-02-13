@@ -178,6 +178,108 @@ result = tools.l2_pr_open()  # Returns ToolResult
 
 ---
 
+## Secrets & Environment Variables
+
+**Never expose secret values.** Use the checker to audit presence only:
+
+```bash
+python3 scripts/check-secrets.py              # Human-readable audit
+python3 scripts/check-secrets.py --json        # Machine-readable
+python3 scripts/check-secrets.py --env-only    # Local .env only
+python3 scripts/check-secrets.py --gh-only     # GitHub secrets/vars only
+```
+
+To add new keys, edit `scripts/check-secrets.py` — append to the appropriate list:
+
+| Scope | List | Where to set |
+|-------|------|--------------|
+| Local `.env` | `ENV_KEYS` | `.env` file (never commit) |
+| Repo secrets | `REPO_SECRETS` | `gh secret set -R jadecli-ai/pm` |
+| Repo variables | `REPO_VARIABLES` | `gh variable set -R jadecli-ai/pm` |
+| Org secrets | `ORG_SECRETS` | `gh secret set --org jadecli-ai` |
+| Org variables | `ORG_VARIABLES` | `gh variable set --org jadecli-ai` |
+
+Current required keys:
+
+| Key | Scope | Purpose |
+|-----|-------|---------|
+| `PRJ_NEON_DATABASE_URL` | env | Neon PostgreSQL connection |
+| `NEON_API_KEY` | repo secret | Neon branch management API |
+| `NEON_PROJECT_ID` | repo variable | Neon project `jolly-morning-83487578` |
+| `CLAUDE_ACCESS_TOKEN` | repo secret | Claude Code OAuth |
+| `CLAUDE_REFRESH_TOKEN` | repo secret | Claude Code OAuth refresh |
+| `CLAUDE_EXPIRES_AT` | repo secret | Claude Code OAuth expiry |
+
+---
+
+## Entity Index (Neon PostgreSQL)
+
+Universal entity registry with CRUD event sourcing. Postgres 18 + native `uuidv7()`.
+
+### Schema
+
+```
+entity_type_dict      → Reference dictionary (append-only, monotonic IDs)
+entity_index          → Latest state per entity (one row = one entity)
+entity_events_idx     → Append-only event log (CREATE/READ/UPDATE/DEACTIVATE)
+```
+
+### Entity Types (monotonically increasing — never reuse IDs)
+
+| ID | Name | Description |
+|----|------|-------------|
+| 1 | `USERS` | User accounts and profiles |
+| 2 | `REPOS` | Git repositories |
+| 3 | `PROJECTS` | Neon or PM projects |
+| 4 | `ORGS` | Organizations |
+| 5 | `AUTH_PROCESS` | Authentication processes and tokens |
+| 6 | `KEYS` | API keys, secrets, credentials metadata |
+| 7 | `DOCUMENTS` | Documents, canvases, files |
+
+To add a new type: `INSERT INTO entity_type_dict (id, name, description) VALUES (8, 'NEW_TYPE', '...');`
+
+### JSON Blob Convention
+
+Every `entity_json_blob` MUST contain `_v` (semver matching `entity_type_dict.schema_version`):
+
+```json
+{"_v": "1.0.0", "name": "example", "status": "active"}
+```
+
+The `create_entity()` function auto-injects `_v` from the type dict. The `update_entity()` function shallow-merges new fields, preserving `_v`.
+
+### SQL Functions
+
+```sql
+-- Create entity (returns entity_id, event_id)
+SELECT * FROM create_entity(
+    1::SMALLINT,                              -- entity_type (USERS)
+    '{"name": "alice"}'::jsonb,               -- entity_json_blob
+    '{"source": "api", "agent": "opus"}'::jsonb, -- system_json_blob
+    FALSE                                      -- is_test
+);
+
+-- Update entity (returns event_id)
+SELECT update_entity(
+    '019c...'::uuid,                          -- entity_id
+    '{"email": "alice@co.com"}'::jsonb,       -- merge into blob
+    '{"source": "manual"}'::jsonb             -- system_json_blob
+);
+
+-- Deactivate entity (returns event_id)
+SELECT deactivate_entity('019c...'::uuid, '{"reason": "removed"}'::jsonb);
+```
+
+### Migration: `V003_entity_index.sql`
+
+Located at `pm/lib/neon_docs/migrations/V003_entity_index.sql`. Run via:
+
+```bash
+PRJ_NEON_DATABASE_URL=... python3 -m lib.neon_docs migrate
+```
+
+---
+
 ## Architecture
 
 ### Layers
