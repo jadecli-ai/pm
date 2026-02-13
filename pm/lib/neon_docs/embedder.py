@@ -27,8 +27,15 @@ async def embed_texts(texts: list[str]) -> list[list[float]]:
     settings = get_settings()
     embeddings: list[list[float]] = []
 
+    # nomic-embed-text has 8192 token context; truncate aggressively for
+    # safety since JSON/URL content can have ~1 token per char
+    max_chars = 7500
+
     async with httpx.AsyncClient(base_url=settings.ollama_host, timeout=120.0) as client:
         for text in texts:
+            if len(text) > max_chars:
+                logger.warning("Truncating text from %d to %d chars for embedding", len(text), max_chars)
+                text = text[:max_chars]
             try:
                 resp = await client.post(
                     "/api/embed",

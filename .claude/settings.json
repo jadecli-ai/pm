@@ -12,6 +12,8 @@
     ]
   },
   "environment": {
-    "MLFLOW_CLAUDE_TRACING_ENABLED": "true"
+    "MLFLOW_CLAUDE_TRACING_ENABLED": "true",
+    "MLFLOW_TRACKING_URI": "file://./mlruns",
+    "MLFLOW_EXPERIMENT_NAME": "pm-neon-phase8"
   }
 }

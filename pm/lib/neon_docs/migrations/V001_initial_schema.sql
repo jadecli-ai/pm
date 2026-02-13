@@ -68,7 +68,7 @@ CREATE OR REPLACE FUNCTION upsert_document(
     p_content   TEXT
 ) RETURNS TABLE(action TEXT, doc_id INTEGER) AS $$
 DECLARE
-    v_hash TEXT := encode(sha256(p_content::bytea), 'hex');
+    v_hash TEXT := encode(sha256(convert_to(p_content, 'UTF8')), 'hex');
     v_id   INTEGER;
 BEGIN
     WITH existing AS (
