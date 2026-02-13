@@ -220,10 +220,31 @@ l3-doc-setup: ## L3-Doc: Full bootstrap (migrate + index + drain + verify)
 	@echo "═══ Setup Complete ═══"
 
 # ============================================================================
+# DASHBOARD PIPELINE (Vercel-style insights)
+# ============================================================================
+
+.PHONY: l0-dashboard l1-dashboard l2-pr-dashboard
+
+l0-dashboard: ## L0-Dash: Generate DASHBOARD.json
+	@python3 scripts/dashboard/generate.py
+
+l1-dashboard: ## L1-Dash: Generate + open in browser
+	@$(MAKE) -s l0-dashboard
+	@python3 -c "import webbrowser; webbrowser.open('file://$$(pwd)/DASHBOARD.html')" 2>/dev/null || echo "Open DASHBOARD.html manually"
+
+l2-pr-dashboard: ## L2-Dash: Generate + commit + push (for PR updates)
+	@$(MAKE) -s l0-dashboard
+	@git diff --quiet DASHBOARD.json 2>/dev/null || { \
+		git add DASHBOARD.json && \
+		git commit -m "chore(dashboard): update dashboard data" && \
+		git push && \
+		echo "✓ dashboard pushed"; }
+
+# ============================================================================
 # SHORTCUTS (ergonomic aliases)
 # ============================================================================
 
-.PHONY: test index arch validate check ci cd docs-setup docs-status
+.PHONY: test index arch validate check ci cd docs-setup docs-status dashboard
 
 test: l0-test        ## Alias: run tests
 index: l1-index      ## Alias: check/update index
@@ -234,6 +255,7 @@ ci: l3-ci            ## Alias: CI pipeline
 cd: l3-cd            ## Alias: CD pipeline
 docs-setup: l3-doc-setup  ## Alias: full doc bootstrap
 docs-status: l0-doc-status ## Alias: cache stats
+dashboard: l1-dashboard ## Alias: generate + open dashboard
 
 # ============================================================================
 # HELP
@@ -260,5 +282,8 @@ help: ## Show this help
 	@echo "Document Pipeline:"
 	@grep -E '^l[0-3]-doc-[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/'
 	@echo ""
+	@echo "Dashboard Pipeline:"
+	@grep -E '^l[0-3]-dashboard[a-z-]*:.*##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/'
+	@echo ""
 	@echo "Shortcuts:"
-	@grep -E '^(test|index|arch|validate|check|ci|cd|review|docs-setup|docs-status):.*##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/'
+	@grep -E '^(test|index|arch|validate|check|ci|cd|review|docs-setup|docs-status|dashboard):.*##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/'
