@@ -14,6 +14,7 @@ import asyncpg
 
 from .config import get_settings
 from .log import get_logger
+from .tracer import trace_operation
 
 logger = get_logger("migrate")
 
@@ -45,6 +46,7 @@ async def _get_applied(conn: asyncpg.Connection) -> set[str]:
     return {row["name"] for row in rows}
 
 
+@trace_operation("neon.run_migrations")
 async def run_migrations() -> list[str]:
     """Run all pending migrations in order.
 

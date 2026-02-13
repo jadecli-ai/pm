@@ -17,10 +17,12 @@ from .models import (
     SearchResult,
     UpsertResult,
 )
+from .tracer import trace_operation
 
 logger = get_logger("repository")
 
 
+@trace_operation("neon.upsert_document")
 async def upsert_document(
     *,
     url: str | None = None,
@@ -47,6 +49,7 @@ async def upsert_document(
         raise QueryError(f"upsert failed: {e}", cause=e) from e
 
 
+@trace_operation("neon.check_url")
 async def check_url(url: str) -> CacheCheckResult:
     """Check if a URL is cached."""
     async with connection() as conn:
@@ -59,6 +62,7 @@ async def check_url(url: str) -> CacheCheckResult:
         return CacheCheckResult(hit=False)
 
 
+@trace_operation("neon.search")
 async def search(
     embedding: list[float],
     *,
@@ -189,6 +193,7 @@ async def mark_processed(doc_id: int) -> None:
         )
 
 
+@trace_operation("neon.get_status")
 async def get_status() -> CacheStatus:
     """Get cache statistics."""
     async with connection() as conn:

@@ -22,10 +22,12 @@ from pathlib import Path
 
 from .db import close_pool
 from .embedder import embed_single
-from .log import setup_logging
+from .log import get_logger, setup_logging
 from .models import UpsertAction
 from .repository import check_url, get_status, search, upsert_document
 from .worker import drain_queue
+
+logger = get_logger("cli")
 
 
 async def cmd_store(args: argparse.Namespace) -> dict:
@@ -173,6 +175,8 @@ async def async_main() -> None:
     args = parser.parse_args()
 
     try:
+        logger.info("CLI command: %s", args.command)
+
         if args.command == "store":
             result = await cmd_store(args)
         elif args.command == "check-url":
@@ -192,6 +196,7 @@ async def async_main() -> None:
             parser.print_help()
             return
 
+        logger.info("CLI %s complete: %s", args.command, json.dumps(result, default=str)[:200])
         print(json.dumps(result, indent=2, default=str))
     finally:
         await close_pool()

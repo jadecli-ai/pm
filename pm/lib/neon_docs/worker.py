@@ -17,10 +17,12 @@ from .repository import (
     pick_queue_job,
 )
 from .tokenizer import count_tokens
+from .tracer import trace_operation
 
 logger = get_logger("worker")
 
 
+@trace_operation("neon.process_one_job")
 async def process_one_job(job: QueueJob) -> bool:
     """Process a single queue job."""
     try:
@@ -41,6 +43,7 @@ async def process_one_job(job: QueueJob) -> bool:
         return False
 
 
+@trace_operation("neon.drain_queue")
 async def drain_queue() -> dict[str, int]:
     """Process all pending queue jobs."""
     processed = 0
