@@ -1,0 +1,21 @@
+name: Neon Schema Diff
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - 'pm/lib/neon_docs/migrations/**'
+
+permissions:
+  pull-requests: write
+
+jobs:
+  schema-diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: neondatabase/schema-diff-action@v1
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          compare_branch: preview/pr-${{ github.event.pull_request.number }}
+          api_key: ${{ secrets.NEON_API_KEY }}
+          database: neondb
