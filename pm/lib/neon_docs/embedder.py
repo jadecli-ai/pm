@@ -35,9 +35,7 @@ async def embed_texts(texts: list[str]) -> list[list[float]]:
                     json={"model": settings.ollama_model, "input": text},
                 )
             except httpx.ConnectError as e:
-                raise OllamaConnectionError(
-                    f"Cannot connect to Ollama at {settings.ollama_host}", cause=e
-                ) from e
+                raise OllamaConnectionError(f"Cannot connect to Ollama at {settings.ollama_host}", cause=e) from e
             except httpx.TimeoutException as e:
                 raise OllamaConnectionError("Ollama request timed out", cause=e) from e
 
