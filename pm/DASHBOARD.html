@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PM System - Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --border: #30363d;
+            --text: #c9d1d9;
+            --text-muted: #8b949e;
+            --accent: #58a6ff;
+            --success: #3fb950;
+            --warning: #d29922;
+            --error: #f85149;
+            --purple: #bc8cff;
+            --orange: #f0883e;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        h1 { font-size: 1.5rem; font-weight: 600; }
+        .meta { color: var(--text-muted); font-size: 0.875rem; }
+        .org-badge {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .header-actions { display: flex; align-items: center; gap: 0.75rem; }
+        .refresh-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.4rem 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: border-color 0.2s;
+        }
+        .refresh-btn:hover { border-color: var(--accent); }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            gap: 0.375rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 0.5rem 1.25rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .tab-btn:hover { color: var(--text); border-color: var(--text-muted); }
+        .tab-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #000;
+        }
+
+        /* Tab Sections */
+        .tab-section { display: none; }
+        .tab-section.active { display: block; }
+
+        /* Metric Cards */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .metric-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        .metric-icon { font-size: 1.75rem; line-height: 1; }
+        .metric-info { flex: 1; }
+        .metric-value { font-size: 1.75rem; font-weight: 700; line-height: 1.2; }
+        .metric-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+        .metric-card.error-highlight { border-color: var(--error); }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.125rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .badge-success { background: rgba(63, 185, 80, 0.15); color: var(--success); border: 1px solid rgba(63, 185, 80, 0.3); }
+        .badge-error { background: rgba(248, 81, 73, 0.15); color: var(--error); border: 1px solid rgba(248, 81, 73, 0.3); }
+        .badge-warning { background: rgba(210, 153, 34, 0.15); color: var(--warning); border: 1px solid rgba(210, 153, 34, 0.3); }
+        .badge-muted { background: rgba(139, 148, 158, 0.15); color: var(--text-muted); border: 1px solid rgba(139, 148, 158, 0.3); }
+        .badge-accent { background: rgba(88, 166, 255, 0.15); color: var(--accent); border: 1px solid rgba(88, 166, 255, 0.3); }
+        .badge-purple { background: rgba(188, 140, 255, 0.15); color: var(--purple); border: 1px solid rgba(188, 140, 255, 0.3); }
+        .badge-orange { background: rgba(240, 136, 62, 0.15); color: var(--orange); border: 1px solid rgba(240, 136, 62, 0.3); }
+
+        /* Health Indicator */
+        .health-row {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .health-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+        .health-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .health-dot.healthy { background: var(--success); box-shadow: 0 0 6px rgba(63, 185, 80, 0.5); }
+        .health-dot.unhealthy { background: var(--error); box-shadow: 0 0 6px rgba(248, 81, 73, 0.5); }
+
+        /* Cards / Panels */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Code Display */
+        .mono { font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace; }
+        .hash-display {
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.9rem;
+            background: var(--bg);
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            display: inline-block;
+            color: var(--accent);
+        }
+
+        /* Agent Grid */
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 0.75rem;
+        }
+        .agent-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.875rem;
+            transition: border-color 0.2s;
+        }
+        .agent-card:hover { border-color: var(--accent); }
+        .agent-name { font-weight: 600; margin-bottom: 0.25rem; }
+        .agent-model { font-size: 0.75rem; color: var(--text-muted); font-family: monospace; }
+
+        /* Bar Charts (CSS-only) */
+        .bar-chart { margin-top: 0.75rem; }
+        .bar-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            gap: 0.75rem;
+        }
+        .bar-label {
+            min-width: 80px;
+            font-size: 0.8rem;
+            text-align: right;
+            color: var(--text-muted);
+        }
+        .bar-track {
+            flex: 1;
+            height: 22px;
+            background: var(--bg);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        .bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.4s ease;
+            min-width: 2px;
+        }
+        .bar-value {
+            min-width: 36px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-family: monospace;
+        }
+
+        /* Branch Info Header */
+        .branch-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        .branch-name {
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        .branch-base {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Diff Stats */
+        .diff-stats {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            font-family: monospace;
+            font-size: 0.875rem;
+        }
+        .diff-add { color: var(--success); }
+        .diff-del { color: var(--error); }
+
+        /* Directory Tree */
+        .dir-tree { margin-top: 0.75rem; }
+        .dir-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.3rem 0;
+            font-size: 0.85rem;
+        }
+        .dir-indent { width: 1.25rem; display: inline-block; }
+        .dir-name { font-family: monospace; color: var(--text); }
+        .dir-count {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            background: var(--border);
+            padding: 0 0.375rem;
+            border-radius: 8px;
+        }
+        .dir-icon { color: var(--text-muted); font-size: 0.75rem; }
+
+        /* Changed Files */
+        .file-group { margin-bottom: 1rem; }
+        .file-group-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+        .file-group-title.added { color: var(--success); }
+        .file-group-title.modified { color: var(--warning); }
+        .file-group-title.deleted { color: var(--error); }
+        .file-entry {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.3rem 0.5rem;
+            font-size: 0.8rem;
+            font-family: monospace;
+            border-radius: 4px;
+        }
+        .file-entry:hover { background: var(--bg); }
+        .file-status {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .file-status.A { background: rgba(63, 185, 80, 0.2); color: var(--success); }
+        .file-status.M { background: rgba(210, 153, 34, 0.2); color: var(--warning); }
+        .file-status.D { background: rgba(248, 81, 73, 0.2); color: var(--error); }
+
+        /* PR Info */
+        .pr-card {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 0.5rem 1.5rem;
+            align-items: baseline;
+        }
+        .pr-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            text-align: right;
+        }
+        .pr-value { font-size: 0.9rem; }
+        .pr-value a { color: var(--accent); text-decoration: none; }
+        .pr-value a:hover { text-decoration: underline; }
+        .pr-state {
+            display: inline-block;
+            padding: 0.15rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .pr-state.open { background: rgba(63, 185, 80, 0.15); color: var(--success); }
+        .pr-state.closed { background: rgba(248, 81, 73, 0.15); color: var(--error); }
+        .pr-state.merged { background: rgba(188, 140, 255, 0.15); color: var(--purple); }
+
+        /* Phase Checklist */
+        .phase-list { list-style: none; }
+        .phase-item {
+            display: grid;
+            grid-template-columns: 28px 1fr auto auto;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.625rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .phase-item:last-child { border-bottom: none; }
+        .phase-status { font-size: 1.1rem; text-align: center; }
+        .phase-name { font-size: 0.875rem; }
+        .phase-commits {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: monospace;
+        }
+        .phase-bar {
+            width: 100px;
+            height: 6px;
+            background: var(--bg);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .phase-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            background: var(--accent);
+            transition: width 0.4s ease;
+        }
+
+        /* Commit Summary Badges */
+        .commit-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+        .commit-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* Mermaid Diagram Container */
+        .diagram-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            overflow-x: auto;
+        }
+
+        /* Link Row */
+        .link-row {
+            margin-top: 1rem;
+        }
+        .link-row a {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+        .link-row a:hover { text-decoration: underline; }
+
+        /* Footer */
+        footer {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        footer a { color: var(--accent); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+        }
+        .empty-state h2 { color: var(--text); margin-bottom: 0.75rem; font-size: 1.25rem; }
+        .empty-state p { margin-bottom: 0.5rem; }
+        .empty-state code {
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+            background: var(--surface);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+
+        /* Two-column layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .agent-grid { grid-template-columns: 1fr; }
+            .two-col { grid-template-columns: 1fr; }
+            header { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+            .tab-nav { gap: 0.25rem; }
+            .tab-btn { padding: 0.4rem 0.75rem; font-size: 0.8rem; }
+            .phase-item { grid-template-columns: 28px 1fr auto; }
+            .phase-bar { display: none; }
+            .pr-card { grid-template-columns: 1fr; gap: 0.25rem 0; }
+            .pr-label { text-align: left; }
+            .branch-header { flex-direction: column; align-items: flex-start; }
+        }
+        @media (max-width: 480px) {
+            .stats-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <h1>PM System Dashboard</h1>
+                <div class="meta">jadecli-ai/pm &bull; Neon Specialist Agent</div>
+            </div>
+            <div class="header-actions">
+                <button class="refresh-btn" onclick="refreshData()" title="Re-fetch DASHBOARD.json">Refresh</button>
+                <span class="org-badge">jadecli-ai</span>
+            </div>
+        </header>
+
+        <!-- Tab Navigation -->
+        <nav class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('database', this)">Database</button>
+            <button class="tab-btn" onclick="switchTab('architecture', this)">Architecture</button>
+            <button class="tab-btn" onclick="switchTab('branch', this)">Branch Impact</button>
+            <button class="tab-btn" onclick="switchTab('pr', this)">PR Release</button>
+        </nav>
+
+        <!-- Empty State (shown when no data) -->
+        <div id="empty-state" class="empty-state" style="display: none;">
+            <h2>No Dashboard Data</h2>
+            <p>Run the following command to generate dashboard data:</p>
+            <p><code>make l0-dashboard</code></p>
+            <p style="margin-top: 1rem;">This will create <code>DASHBOARD.json</code> in the pm/ directory.</p>
+        </div>
+
+        <!-- Tab 1: Database (Neon Insights) -->
+        <section id="tab-database" class="tab-section active">
+            <div class="health-row">
+                <div class="health-indicator">
+                    <span class="health-dot" id="db-health-dot"></span>
+                    <span id="db-health-text">Checking...</span>
+                </div>
+                <span class="badge" id="db-status-badge">--</span>
+            </div>
+            <div class="stats-row" id="db-stats-row">
+                <div class="metric-card">
+                    <span class="metric-icon">&#x1F4C4;</span>
+                    <div class="metric-info">
+                        <div class="metric-value" id="db-documents">--</div>
+                        <div class="metric-label">Documents</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-icon">&#x1F9E9;</span>
+                    <div class="metric-info">
+                        <div class="metric-value" id="db-chunks">--</div>
+                        <div class="metric-label">Chunks</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-icon">&#x23F3;</span>
+                    <div class="metric-info">
+                        <div class="metric-value" id="db-pending">--</div>
+                        <div class="metric-label">Queue Pending</div>
+                    </div>
+                </div>
+                <div class="metric-card" id="db-failed-card">
+                    <span class="metric-icon">&#x274C;</span>
+                    <div class="metric-info">
+                        <div class="metric-value" id="db-failed">--</div>
+                        <div class="metric-label">Queue Failed</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab 2: Architecture -->
+        <section id="tab-architecture" class="tab-section">
+            <div class="stats-row">
+                <div class="metric-card">
+                    <div class="metric-info">
+                        <div class="metric-label">Merkle Root Hash</div>
+                        <div class="hash-display" id="arch-hash">--</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-info">
+                        <div class="metric-value" id="arch-file-count">--</div>
+                        <div class="metric-label">Tracked Files</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Agents</div>
+                <div class="agent-grid" id="arch-agents"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Layer Distribution</div>
+                <div class="bar-chart" id="arch-layers"></div>
+            </div>
+
+            <div class="link-row">
+                <a href="ARCHITECTURE.html">Open interactive architecture &rarr;</a>
+            </div>
+        </section>
+
+        <!-- Tab 3: Branch Impact -->
+        <section id="tab-branch" class="tab-section">
+            <div class="card">
+                <div class="branch-header" id="branch-info"></div>
+            </div>
+
+            <div class="two-col">
+                <div class="card">
+                    <div class="card-title">Commit Type Breakdown</div>
+                    <div class="bar-chart" id="branch-types"></div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Scope Breakdown</div>
+                    <div class="bar-chart" id="branch-scopes"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Files Changed</div>
+                <div class="diff-stats" id="branch-diff-stats"></div>
+            </div>
+
+            <div class="two-col">
+                <div class="card">
+                    <div class="card-title">Impact by Directory</div>
+                    <div class="dir-tree" id="branch-dirs"></div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Changed Files</div>
+                    <div id="branch-files"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab 4: PR Release -->
+        <section id="tab-pr" class="tab-section">
+            <div class="card">
+                <div class="card-title">Pull Request</div>
+                <div class="pr-card" id="pr-info"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Phase Completion</div>
+                <ul class="phase-list" id="pr-phases"></ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Conventional Commit Summary</div>
+                <div id="pr-commit-summary"></div>
+                <div class="commit-badges" id="pr-commit-badges"></div>
+            </div>
+
+            <div class="diagram-container">
+                <div class="card-title" style="border: none; padding: 0; margin-bottom: 0.75rem;">Phase Timeline</div>
+                <div id="pr-timeline"></div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div>
+                <span id="footer-generated">Generated: --</span>
+            </div>
+            <div>jadecli-ai/pm &bull; Neon Specialist Agent Dashboard</div>
+            <div id="footer-pr-link"></div>
+        </footer>
+    </div>
+
+    <!-- Embedded data support: set window.DASHBOARD_DATA before this script -->
+    <script>
+        // ─── Utilities ───────────────────────────────────────────────
+
+        function fmt(n) {
+            if (n == null || isNaN(n)) return '--';
+            return Number(n).toLocaleString();
+        }
+
+        function relativeTime(ts) {
+            if (!ts) return '--';
+            const d = new Date(ts);
+            if (isNaN(d.getTime())) return ts;
+            const now = new Date();
+            const diffMs = now - d;
+            const diffSec = Math.floor(diffMs / 1000);
+            if (diffSec < 60) return 'just now';
+            const diffMin = Math.floor(diffSec / 60);
+            if (diffMin < 60) return diffMin + 'm ago';
+            const diffHr = Math.floor(diffMin / 60);
+            if (diffHr < 24) return diffHr + 'h ago';
+            const diffDay = Math.floor(diffHr / 24);
+            if (diffDay < 30) return diffDay + 'd ago';
+            return d.toLocaleDateString();
+        }
+
+        function escapeHtml(s) {
+            if (!s) return '';
+            const div = document.createElement('div');
+            div.textContent = s;
+            return div.innerHTML;
+        }
+
+        function truncateHash(hash, len) {
+            if (!hash) return '--';
+            return hash.substring(0, len || 12);
+        }
+
+        // ─── Tab Switching ───────────────────────────────────────────
+
+        function switchTab(tabId, btnEl) {
+            document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            const section = document.getElementById('tab-' + tabId);
+            if (section) section.classList.add('active');
+            if (btnEl) btnEl.classList.add('active');
+        }
+
+        // ─── Commit Type Colors ──────────────────────────────────────
+
+        const TYPE_COLORS = {
+            feat:     'var(--accent)',
+            fix:      'var(--error)',
+            test:     'var(--success)',
+            docs:     'var(--warning)',
+            ci:       'var(--purple)',
+            chore:    'var(--text-muted)',
+            refactor: 'var(--orange)',
+            perf:     '#79c0ff',
+            build:    '#7ee787',
+            style:    '#d2a8ff',
+            revert:   '#ff7b72'
+        };
+
+        const TYPE_BADGE_CLASS = {
+            feat:     'badge-accent',
+            fix:      'badge-error',
+            test:     'badge-success',
+            docs:     'badge-warning',
+            ci:       'badge-purple',
+            chore:    'badge-muted',
+            refactor: 'badge-orange',
+            perf:     'badge-accent',
+            build:    'badge-success',
+            style:    'badge-purple',
+            revert:   'badge-error'
+        };
+
+        // ─── Render Functions ────────────────────────────────────────
+
+        function renderDatabase(db) {
+            if (!db) return;
+
+            const connected = db.connected !== false;
+            const failed = db.queue_failed || 0;
+
+            // Health dot
+            const dot = document.getElementById('db-health-dot');
+            const healthText = document.getElementById('db-health-text');
+            if (failed > 0) {
+                dot.className = 'health-dot unhealthy';
+                healthText.textContent = 'Queue failures detected';
+            } else {
+                dot.className = 'health-dot healthy';
+                healthText.textContent = 'All systems healthy';
+            }
+
+            // Status badge
+            const badge = document.getElementById('db-status-badge');
+            if (connected) {
+                badge.className = 'badge badge-success';
+                badge.textContent = 'Connected';
+            } else {
+                badge.className = 'badge badge-muted';
+                badge.textContent = 'Unavailable';
+            }
+
+            // Metrics
+            document.getElementById('db-documents').textContent = fmt(db.documents);
+            document.getElementById('db-chunks').textContent = fmt(db.chunks);
+            document.getElementById('db-pending').textContent = fmt(db.queue_pending);
+            document.getElementById('db-failed').textContent = fmt(failed);
+
+            // Highlight failed card if > 0
+            const failedCard = document.getElementById('db-failed-card');
+            if (failed > 0) {
+                failedCard.classList.add('error-highlight');
+            } else {
+                failedCard.classList.remove('error-highlight');
+            }
+        }
+
+        function renderArchitecture(arch) {
+            if (!arch) return;
+
+            // Merkle root
+            document.getElementById('arch-hash').textContent = truncateHash(arch.merkle_root, 12);
+
+            // File count
+            document.getElementById('arch-file-count').textContent = fmt(arch.file_count);
+
+            // Agents
+            const agentContainer = document.getElementById('arch-agents');
+            agentContainer.innerHTML = '';
+            if (arch.agents && arch.agents.length > 0) {
+                arch.agents.forEach(agent => {
+                    const card = document.createElement('div');
+                    card.className = 'agent-card';
+                    card.innerHTML = '<div class="agent-name">' + escapeHtml(agent.name) + '</div>' +
+                        '<div class="agent-model">' + escapeHtml(agent.model || '') + '</div>';
+                    agentContainer.appendChild(card);
+                });
+            } else {
+                agentContainer.innerHTML = '<div style="color: var(--text-muted); font-size: 0.85rem;">No agents configured</div>';
+            }
+
+            // Layer distribution
+            const layerContainer = document.getElementById('arch-layers');
+            layerContainer.innerHTML = '';
+            const layers = arch.layers || {};
+            const layerColors = {
+                frontend: 'var(--accent)',
+                middleware: 'var(--purple)',
+                backend: 'var(--success)',
+                data: 'var(--warning)'
+            };
+            const layerNames = ['frontend', 'middleware', 'backend', 'data'];
+            const maxCount = Math.max(1, ...layerNames.map(l => layers[l] || 0));
+
+            layerNames.forEach(name => {
+                const count = layers[name] || 0;
+                const pct = (count / maxCount) * 100;
+                const row = document.createElement('div');
+                row.className = 'bar-row';
+                row.innerHTML =
+                    '<div class="bar-label">' + name + '</div>' +
+                    '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%;background:' + (layerColors[name] || 'var(--accent)') + '"></div></div>' +
+                    '<div class="bar-value">' + count + '</div>';
+                layerContainer.appendChild(row);
+            });
+        }
+
+        function renderBranch(branch) {
+            if (!branch) return;
+
+            // Branch header
+            const infoEl = document.getElementById('branch-info');
+            const ahead = branch.commits_ahead != null ? branch.commits_ahead : (branch.commits ? branch.commits.length : 0);
+            infoEl.innerHTML =
+                '<span class="branch-name">' + escapeHtml(branch.name || '--') + '</span>' +
+                '<span class="branch-base">from ' + escapeHtml(branch.base || 'main') + '</span>' +
+                '<span class="badge badge-accent">' + ahead + ' commit' + (ahead !== 1 ? 's' : '') + ' ahead</span>';
+
+            // Commit type breakdown
+            const typesEl = document.getElementById('branch-types');
+            typesEl.innerHTML = '';
+            const types = branch.commit_types || {};
+            const typeKeys = Object.keys(types).sort((a, b) => types[b] - types[a]);
+            const maxType = Math.max(1, ...Object.values(types));
+
+            typeKeys.forEach(type => {
+                const count = types[type];
+                const pct = (count / maxType) * 100;
+                const color = TYPE_COLORS[type] || 'var(--text-muted)';
+                const row = document.createElement('div');
+                row.className = 'bar-row';
+                row.innerHTML =
+                    '<div class="bar-label">' + type + '</div>' +
+                    '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%;background:' + color + '"></div></div>' +
+                    '<div class="bar-value">' + count + '</div>';
+                typesEl.appendChild(row);
+            });
+
+            if (typeKeys.length === 0) {
+                typesEl.innerHTML = '<div style="color: var(--text-muted); font-size: 0.85rem;">No commits</div>';
+            }
+
+            // Scope breakdown
+            const scopesEl = document.getElementById('branch-scopes');
+            scopesEl.innerHTML = '';
+            const scopes = branch.scopes || {};
+            const scopeKeys = Object.keys(scopes).sort((a, b) => scopes[b] - scopes[a]);
+            const maxScope = Math.max(1, ...Object.values(scopes));
+
+            scopeKeys.forEach(scope => {
+                const count = scopes[scope];
+                const pct = (count / maxScope) * 100;
+                const row = document.createElement('div');
+                row.className = 'bar-row';
+                row.innerHTML =
+                    '<div class="bar-label">' + escapeHtml(scope) + '</div>' +
+                    '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%;background:var(--accent)"></div></div>' +
+                    '<div class="bar-value">' + count + '</div>';
+                scopesEl.appendChild(row);
+            });
+
+            if (scopeKeys.length === 0) {
+                scopesEl.innerHTML = '<div style="color: var(--text-muted); font-size: 0.85rem;">No scopes detected</div>';
+            }
+
+            // Diff stats
+            const diffEl = document.getElementById('branch-diff-stats');
+            const ins = branch.insertions || 0;
+            const del = branch.deletions || 0;
+            diffEl.innerHTML =
+                '<span class="diff-add">+' + fmt(ins) + ' insertions</span>' +
+                '<span class="diff-del">-' + fmt(del) + ' deletions</span>';
+
+            // Impact by directory
+            const dirsEl = document.getElementById('branch-dirs');
+            dirsEl.innerHTML = '';
+            const dirs = branch.directories || {};
+            const dirKeys = Object.keys(dirs).sort();
+
+            if (dirKeys.length > 0) {
+                dirKeys.forEach(dir => {
+                    const count = dirs[dir];
+                    const depth = (dir.match(/\//g) || []).length;
+                    const indent = '';
+                    for (let i = 0; i < depth; i++) indent;
+                    const item = document.createElement('div');
+                    item.className = 'dir-item';
+                    item.style.paddingLeft = (depth * 1.25) + 'rem';
+                    item.innerHTML =
+                        '<span class="dir-icon">&#x1F4C1;</span> ' +
+                        '<span class="dir-name">' + escapeHtml(dir) + '</span>' +
+                        '<span class="dir-count">' + count + '</span>';
+                    dirsEl.appendChild(item);
+                });
+            } else {
+                dirsEl.innerHTML = '<div style="color: var(--text-muted); font-size: 0.85rem;">No directories</div>';
+            }
+
+            // Changed files
+            const filesEl = document.getElementById('branch-files');
+            filesEl.innerHTML = '';
+            const files = branch.files || [];
+
+            const grouped = { A: [], M: [], D: [] };
+            files.forEach(f => {
+                const status = f.status || 'M';
+                if (!grouped[status]) grouped[status] = [];
+                grouped[status].push(f);
+            });
+
+            const groupLabels = {
+                A: { title: 'Added', cls: 'added' },
+                M: { title: 'Modified', cls: 'modified' },
+                D: { title: 'Deleted', cls: 'deleted' }
+            };
+
+            ['A', 'M', 'D'].forEach(status => {
+                const items = grouped[status] || [];
+                if (items.length === 0) return;
+                const group = document.createElement('div');
+                group.className = 'file-group';
+                const label = groupLabels[status] || { title: status, cls: '' };
+                group.innerHTML = '<div class="file-group-title ' + label.cls + '">' + label.title + ' (' + items.length + ')</div>';
+                items.forEach(f => {
+                    const entry = document.createElement('div');
+                    entry.className = 'file-entry';
+                    entry.innerHTML =
+                        '<span class="file-status ' + status + '">' + status + '</span>' +
+                        '<span>' + escapeHtml(f.path || f.file || '') + '</span>';
+                    group.appendChild(entry);
+                });
+                filesEl.appendChild(group);
+            });
+
+            if (files.length === 0) {
+                filesEl.innerHTML = '<div style="color: var(--text-muted); font-size: 0.85rem;">No changed files</div>';
+            }
+        }
+
+        function renderPR(pr) {
+            if (!pr) return;
+
+            // PR Info
+            const infoEl = document.getElementById('pr-info');
+            const stateClass = (pr.state || '').toLowerCase();
+            const stateMap = { open: 'open', closed: 'closed', merged: 'merged' };
+            const stateCls = stateMap[stateClass] || 'open';
+
+            infoEl.innerHTML =
+                '<div class="pr-label">Number</div><div class="pr-value">#' + (pr.number || '--') + '</div>' +
+                '<div class="pr-label">Title</div><div class="pr-value">' + escapeHtml(pr.title || '--') + '</div>' +
+                '<div class="pr-label">URL</div><div class="pr-value"><a href="' + escapeHtml(pr.url || '#') + '" target="_blank">' + escapeHtml(pr.url || '--') + '</a></div>' +
+                '<div class="pr-label">State</div><div class="pr-value"><span class="pr-state ' + stateCls + '">' + escapeHtml(pr.state || '--') + '</span></div>';
+
+            // Phases
+            const phasesEl = document.getElementById('pr-phases');
+            phasesEl.innerHTML = '';
+            const phases = pr.phases || [];
+            const totalCommits = phases.reduce((sum, p) => sum + (p.commits || 0), 0) || 1;
+
+            phases.forEach(phase => {
+                const statusIcon = phase.status === 'completed' ? '&#x2705;' :
+                                   phase.status === 'in_progress' ? '&#x1F504;' : '&#x23F3;';
+                const pct = ((phase.commits || 0) / totalCommits) * 100;
+                const li = document.createElement('li');
+                li.className = 'phase-item';
+                li.innerHTML =
+                    '<span class="phase-status">' + statusIcon + '</span>' +
+                    '<span class="phase-name">' + escapeHtml(phase.name || 'Phase ' + (phase.id != null ? phase.id : '?')) + '</span>' +
+                    '<span class="phase-commits">' + (phase.commits || 0) + ' commit' + ((phase.commits || 0) !== 1 ? 's' : '') + '</span>' +
+                    '<div class="phase-bar"><div class="phase-bar-fill" style="width:' + pct + '%"></div></div>';
+                phasesEl.appendChild(li);
+            });
+
+            if (phases.length === 0) {
+                phasesEl.innerHTML = '<li style="padding: 0.5rem 0; color: var(--text-muted);">No phases defined</li>';
+            }
+
+            // Commit summary
+            const summaryEl = document.getElementById('pr-commit-summary');
+            const badgesEl = document.getElementById('pr-commit-badges');
+            const commitTypes = pr.commit_types || {};
+            const totalC = Object.values(commitTypes).reduce((a, b) => a + b, 0);
+            summaryEl.innerHTML = '<span style="font-size: 1.1rem; font-weight: 600;">' + fmt(totalC) + '</span> <span style="color: var(--text-muted);">total commits</span>';
+
+            badgesEl.innerHTML = '';
+            Object.keys(commitTypes).sort((a, b) => commitTypes[b] - commitTypes[a]).forEach(type => {
+                const cls = TYPE_BADGE_CLASS[type] || 'badge-muted';
+                const span = document.createElement('span');
+                span.className = 'commit-badge badge ' + cls;
+                span.textContent = type + ': ' + commitTypes[type];
+                badgesEl.appendChild(span);
+            });
+
+            // Mermaid timeline
+            renderTimeline(phases);
+
+            // Footer PR link
+            if (pr.url) {
+                document.getElementById('footer-pr-link').innerHTML = '<a href="' + escapeHtml(pr.url) + '" target="_blank">PR #' + (pr.number || '') + '</a>';
+            }
+        }
+
+        function renderTimeline(phases) {
+            const container = document.getElementById('pr-timeline');
+            if (!phases || phases.length === 0) {
+                container.innerHTML = '<div style="color: var(--text-muted); font-size: 0.85rem;">No phases to display</div>';
+                return;
+            }
+
+            let gantt = 'gantt\n';
+            gantt += '    title Phase Timeline\n';
+            gantt += '    dateFormat X\n';
+            gantt += '    axisFormat %s\n';
+
+            phases.forEach((phase, i) => {
+                const name = (phase.name || 'Phase ' + i).replace(/:/g, ' ');
+                const status = phase.status || 'pending';
+                const marker = status === 'completed' ? 'done,' :
+                               status === 'in_progress' ? 'active,' : '';
+                const duration = Math.max(1, phase.commits || 1);
+                if (i === 0) {
+                    gantt += '    ' + name + ' :' + marker + ' p' + i + ', 0, ' + duration + '\n';
+                } else {
+                    gantt += '    ' + name + ' :' + marker + ' p' + i + ', after p' + (i - 1) + ', ' + duration + '\n';
+                }
+            });
+
+            container.innerHTML = '<pre class="mermaid">' + gantt + '</pre>';
+
+            // Re-init mermaid for new content
+            try {
+                mermaid.run({ nodes: container.querySelectorAll('.mermaid') });
+            } catch (e) {
+                // Mermaid might not be loaded yet; will catch on init
+            }
+        }
+
+        // ─── Data Loading ────────────────────────────────────────────
+
+        function applyData(data) {
+            if (!data) {
+                document.getElementById('empty-state').style.display = 'block';
+                document.querySelectorAll('.tab-section').forEach(s => s.style.display = 'none');
+                return;
+            }
+
+            document.getElementById('empty-state').style.display = 'none';
+            // Ensure the active tab is visible
+            const activeTab = document.querySelector('.tab-section.active');
+            if (activeTab) activeTab.style.display = 'block';
+
+            renderDatabase(data.database);
+            renderArchitecture(data.architecture);
+            renderBranch(data.branch);
+            renderPR(data.pr);
+
+            // Footer timestamp
+            const generated = data.generated || data.timestamp;
+            if (generated) {
+                const d = new Date(generated);
+                const formatted = isNaN(d.getTime()) ? generated : d.toLocaleString() + ' (' + relativeTime(generated) + ')';
+                document.getElementById('footer-generated').textContent = 'Generated: ' + formatted;
+            }
+        }
+
+        function loadData() {
+            // 1. Try embedded data first
+            if (window.DASHBOARD_DATA) {
+                applyData(window.DASHBOARD_DATA);
+                return;
+            }
+
+            // 2. Try fetching DASHBOARD.json
+            fetch('DASHBOARD.json')
+                .then(function(resp) {
+                    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                    return resp.json();
+                })
+                .then(function(data) {
+                    applyData(data);
+                })
+                .catch(function(err) {
+                    console.warn('Could not load DASHBOARD.json:', err.message);
+                    // Show empty state
+                    applyData(null);
+                });
+        }
+
+        function refreshData() {
+            // Clear embedded data flag to force re-fetch
+            fetch('DASHBOARD.json')
+                .then(function(resp) {
+                    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                    return resp.json();
+                })
+                .then(function(data) {
+                    applyData(data);
+                })
+                .catch(function(err) {
+                    console.warn('Refresh failed:', err.message);
+                    // If we have embedded data, fall back to it
+                    if (window.DASHBOARD_DATA) {
+                        applyData(window.DASHBOARD_DATA);
+                    } else {
+                        applyData(null);
+                    }
+                });
+        }
+
+        // ─── Initialize ─────────────────────────────────────────────
+
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: 'dark',
+            themeVariables: {
+                darkMode: true,
+                background: '#161b22',
+                primaryColor: '#58a6ff',
+                primaryTextColor: '#c9d1d9',
+                primaryBorderColor: '#30363d',
+                lineColor: '#8b949e',
+                secondaryColor: '#21262d',
+                tertiaryColor: '#161b22'
+            }
+        });
+
+        loadData();
+    </script>
+</body>
+</html>
