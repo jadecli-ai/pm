@@ -1,31 +1,43 @@
 {
   "version": "1.0.0",
-  "generated": "2026-02-11T19:04:54.472318",
-  "root": "a67a99157aa2b84c360ac7905d05b084ce98bd9dfe565c878ba018d9223db172",
+  "generated": "2026-02-12T18:29:07.231731",
+  "root": "ffade74de75b3bb45a7e0877b6dda8be80357f4c3ca51edaeb62e7c0b0aad7d3",
   "files": {
     ".claude/commands/ask.md": {
-      "hash": "41a18678d4bf458e4b588620652ac3bbec789ee07c5a4ed33b0787b30f7ce5a8",
+      "hash": "921082503337a9fb593d47914f199dbe68a02782fb9b6e9052231694cbe21d7e",
       "lines": 159,
       "type": "doc",
       "purpose": "doc:ask"
     },
     ".claude/commands/pm.md": {
-      "hash": "90d3f3a60fa4a6cfae4e8e3cce95a486f9a97edce52a0dc17eec33c97f01e138",
+      "hash": "7d07c668b10f4cfe97cc889f604a1a101bfd750cab6ac827659dcc5a74f34d28",
       "lines": 56,
       "type": "doc",
       "purpose": "doc:pm"
     },
+    ".claude/commands/review.md": {
+      "hash": "1cf1f356ebbb4324383811f31c2abcabb237d288d097d903183c22de987190c6",
+      "lines": 175,
+      "type": "doc",
+      "purpose": "doc:review"
+    },
     ".claude/skills/pm-atomic.md": {
-      "hash": "27fdc8ad5464fe38796920aa36d8592dc4eaf11d7a56b88e6846b0328ffde582",
+      "hash": "d44e1c19508fbfc2c7563a20125a77c251e1ff7edf8d3adb7b977392f1027130",
       "lines": 45,
       "type": "doc",
       "purpose": "doc:pm-atomic"
     },
     ".claude/skills/pm-workflow.md": {
-      "hash": "477bc5a3a2bf4e2baa45febe2c751cab20a486a5b126e08c16dd32c76717af4e",
+      "hash": "c61c1b13dce25080bb4566f9ea0b90654d650a342f8a27422d44a996b76c4c1d",
       "lines": 65,
       "type": "doc",
       "purpose": "doc:pm-workflow"
+    },
+    ".claude/skills/review-pipeline.md": {
+      "hash": "8c2d0b0dcbdd7a0dc909fed2ad2245935472767c4465be6d07c5871a93db1f69",
+      "lines": 281,
+      "type": "doc",
+      "purpose": "doc:review-pipeline"
     },
     "ARCHITECTURE.md": {
       "hash": "b583d4a53752402f2a978b520e01fed9e1213607e5595033de97ce38d29eeb7d",
@@ -34,19 +46,19 @@
       "purpose": "doc:ARCHITECTURE"
     },
     "CHANGELOG.md": {
-      "hash": "b855f1e64d4a2559df44d593b4f9cde4f28000b11db54fac86024c00e5d0edb7",
+      "hash": "9fb94b3fe8567a7bc4a8edb434999807d8987bdbf8a4280a736c0b1e58abfd11",
       "lines": 56,
       "type": "doc",
       "purpose": "doc:CHANGELOG"
     },
     "CLAUDE.md": {
-      "hash": "6127b42557adab8a1bd43c8d67ed6d4bab3838e3ed687f3edbe411ec3743a3f2",
-      "lines": 324,
+      "hash": "6342a3af9aebc13799131d96ccb61723854c69986f1898fb79fdc91a44eb1cda",
+      "lines": 439,
       "type": "doc",
       "purpose": "doc:CLAUDE"
     },
     "ENTRYPOINT.md": {
-      "hash": "5c4dccefd9d1fd223749a2c54b1682700bac1d8defa56d2e55758453453b6c61",
+      "hash": "708b7da758bd8765673d2af4656103d550dbed0495f937633230395b22d810b4",
       "lines": 191,
       "type": "doc",
       "purpose": "doc:ENTRYPOINT"
@@ -57,94 +69,153 @@
       "type": "doc",
       "purpose": "doc:README"
     },
-    "agents/sdm.md": {
-      "hash": "4c3186c7f84d178eaa933c0c595bd50722edd14d65db28932d1e6f81d2b7bfaf",
-      "lines": 118,
+    "agents/assignment-manager.md": {
+      "hash": "4e3a493735e8f37468d9c805a9bf9e87230c6e1d9c8159a7108e98a38b436cb2",
+      "lines": 251,
       "type": "agent",
-      "purpose": "agent:sdm:claude-sonnet-4-5-20250929",
-      "name": "sdm",
+      "purpose": "agent:assignment-manager:claude-haiku-3-5-20241022",
+      "name": "assignment-manager",
+      "model": "claude-haiku-3-5-20241022"
+    },
+    "agents/mlflow-analyzer.md": {
+      "hash": "98e6b1209561f8cff73597cf91f9e7e5b18f348f05dfeb7ed102627e984950c8",
+      "lines": 309,
+      "type": "agent",
+      "purpose": "agent:mlflow-analyzer:claude-opus-4-5-20251101",
+      "name": "mlflow-analyzer",
+      "model": "claude-opus-4-5-20251101"
+    },
+    "agents/neon-specialist.md": {
+      "hash": "d2322ff61ce193e9c9c341a79cbf4ec3de85dd2387a306cea195a2542eee0b77",
+      "lines": 144,
+      "type": "agent",
+      "purpose": "agent:neon-specialist:claude-opus-4-6",
+      "id": "AGENT-NEON-SPECIALIST",
+      "version": "1.0.0",
+      "status": "active",
+      "name": "neon-specialist",
+      "model": "claude-opus-4-6"
+    },
+    "agents/review-synthesizer.md": {
+      "hash": "1e2d1b6bd87781486abdcd755da5ba9daf869294e62a701f2e6a9603cb90f125",
+      "lines": 264,
+      "type": "agent",
+      "purpose": "agent:review-synthesizer:claude-sonnet-4-5-20250929",
+      "name": "review-synthesizer",
       "model": "claude-sonnet-4-5-20250929"
+    },
+    "agents/sdm.md": {
+      "hash": "a3f4b390bd73f29509d1e3612f78b4e9ae1dcc2470cc2ba642720c5d4e9211d0",
+      "lines": 159,
+      "type": "agent",
+      "purpose": "agent:sdm:claude-opus-4-6",
+      "name": "sdm",
+      "model": "claude-opus-4-6"
     },
     "agents/sprint-master.md": {
-      "hash": "f17c45de853b570109fa23cf5af6882c6c9cefcfbb7e4a23e1bbe92a9b2b538b",
-      "lines": 153,
+      "hash": "d9565f2f95058488c64059f151e7eb68f711d1678fa45108e036d9ab79cdc31a",
+      "lines": 200,
       "type": "agent",
-      "purpose": "agent:sprint-master:haiku",
+      "purpose": "agent:sprint-master:claude-opus-4-6",
       "name": "sprint-master",
-      "model": "haiku"
+      "model": "claude-opus-4-6"
     },
     "agents/staff-engineer.md": {
-      "hash": "51f9caeda52894fdc5a8fed96db57cb750a8b80d90ae5ce181dd7215f913bdc3",
-      "lines": 115,
+      "hash": "4dbb6711b523e91cc60b4a86f17130fab2b1c0bc93047c2965512dcbee5f4d69",
+      "lines": 147,
       "type": "agent",
-      "purpose": "agent:staff-engineer:claude-sonnet-4-5-20250929",
+      "purpose": "agent:staff-engineer:claude-opus-4-6",
       "name": "staff-engineer",
-      "model": "claude-sonnet-4-5-20250929"
+      "model": "claude-opus-4-6"
+    },
+    "agents/steering-orchestrator.md": {
+      "hash": "0b7ac5013bf874aee4e4202715f510d2a13238a65552c7093b3ed3245670ff31",
+      "lines": 212,
+      "type": "agent",
+      "purpose": "agent:steering-orchestrator:claude-opus-4-5-20251101",
+      "name": "steering-orchestrator",
+      "model": "claude-opus-4-5-20251101"
+    },
+    "agents/test-reviewer.md": {
+      "hash": "8194b6a82339a803bed3c853ae95ede82f74291e0a11ae602dac8013de9ef843",
+      "lines": 222,
+      "type": "agent",
+      "purpose": "agent:test-reviewer:claude-opus-4-5-20251101",
+      "name": "test-reviewer",
+      "model": "claude-opus-4-5-20251101"
+    },
+    "agents/value-reviewer.md": {
+      "hash": "dfe275499de83f10911e2ed6a290cdbc6bcf971f70428d05f1ae59fddc6e5541",
+      "lines": 270,
+      "type": "agent",
+      "purpose": "agent:value-reviewer:claude-opus-4-5-20251101",
+      "name": "value-reviewer",
+      "model": "claude-opus-4-5-20251101"
     },
     "agents/vp-product.md": {
-      "hash": "10ccf13bacfacd6eb97dc941b5aaa13c02850e3fcefe667b161f7ff84084524f",
-      "lines": 111,
+      "hash": "25bfa9b8b309e39e3fcf910a47e1bae729a6acb4716069a8f4dcff7682a9d9a6",
+      "lines": 167,
       "type": "agent",
-      "purpose": "agent:vp-product:claude-opus-4-5-20250929",
+      "purpose": "agent:vp-product:claude-opus-4-6",
       "name": "vp-product",
-      "model": "claude-opus-4-5-20250929"
+      "model": "claude-opus-4-6"
     },
     "docs/agent-teams-workarounds.md": {
-      "hash": "6a59bccb5758c84270a2eb8aff5f94ca1aac8957907207386187355822dd3662",
+      "hash": "de4c783a41df412460cb28f182a115f8c89c3b88a1a5e64a1fd21388584f0da0",
       "lines": 288,
       "type": "doc",
       "purpose": "doc:agent-teams-workarounds"
     },
     "docs/fetch/anthropic-engineering-patterns.md": {
-      "hash": "127e7e1223ea50979523f700a8faa5a875f35b02fbb2a02dcc97c3463b8fd531",
+      "hash": "82fc44a30cb56ecba535860ebef1bb4108fc9f68b1bd75061c5faea72f56a9f6",
       "lines": 81,
       "type": "doc",
       "purpose": "doc:anthropic-engineering-patterns"
     },
     "docs/fetch/anthropic-prompt-engineering.md": {
-      "hash": "d569e1894493d177101aebf3d41be4583dd6c86ff6c94736f22fdacd99a30b8a",
+      "hash": "883c104d7560cad45149855faef9337851145a2dca9400e3b7dd6d82e3fabc28",
       "lines": 121,
       "type": "doc",
       "purpose": "doc:anthropic-prompt-engineering"
     },
     "docs/fetch/anthropic-xml-tags.md": {
-      "hash": "72d8119403e15cff67f1bd2d27fb8f04e6c9a761017172aa2ca08a3d1dea0c55",
+      "hash": "472a10446f699cacc338140512a203902a39a48ab373e1f11131a8ca2f2f8ee9",
       "lines": 117,
       "type": "doc",
       "purpose": "doc:anthropic-xml-tags"
     },
     "docs/fetch/claude-code-memory.md": {
-      "hash": "4df57e870aa34ad750bd514b880fce156dfd2af19543fd9b58fbc692c010667f",
+      "hash": "9ca28fe88c8ac3c0498195d92474af04646bf5c84656533a7908a8a5c1b2364a",
       "lines": 122,
       "type": "doc",
       "purpose": "doc:claude-code-memory"
     },
     "docs/fetch/claude-code-subagents.md": {
-      "hash": "a5e71bc0d251d24c6e370bdd0185427308f2f43ff431d543bd110b073c86d4fe",
+      "hash": "fe0c8a5d2f3b8a9db692b819350f44319e2e860f70e09267105808ff29d7cc3a",
       "lines": 155,
       "type": "doc",
       "purpose": "doc:claude-code-subagents"
     },
     "docs/fetch/claude-mem-plugin.md": {
-      "hash": "c0c697b0daf3e33418e0c831562500a6b579674e95dd332ffcfd95056a63401b",
+      "hash": "10e74b4ab861ce50e10859f8cfe26a849e5d1e753e0a3846563f37b4067eb049",
       "lines": 67,
       "type": "doc",
       "purpose": "doc:claude-mem-plugin"
     },
     "docs/fetch/memory-bank-system.md": {
-      "hash": "8fd054d10f55f9c94c5b4f74a9d112da4be13259e46d9055934886e815bfb57a",
+      "hash": "6c3fd269ceed6768a6f3957cf727723a3e42460c2a89c5c5c27807e8f316d397",
       "lines": 55,
       "type": "doc",
       "purpose": "doc:memory-bank-system"
     },
     "docs/research/claude-code-memory-system.md": {
-      "hash": "6aa5bf5f400f0acf6b7eceebee49abe5037356a3a10c7851a78d58b8d6e4108a",
+      "hash": "a70a41fa79c10b6821b98669162f36a8ffebdf090a1dad66f6f6496acb7374d9",
       "lines": 313,
       "type": "doc",
       "purpose": "doc:claude-code-memory-system"
     },
     "docs/research/prompt-engineering-guide.md": {
-      "hash": "ffc15609717a60d13ddd4ddb1074df8e34f1ed55f51cf279331071c9a366570f",
+      "hash": "d212bf4b421314606eb80e8f8f00e6f60b68e89a4af1a2d8fc54fc5bc8534ad6",
       "lines": 293,
       "type": "doc",
       "purpose": "doc:prompt-engineering-guide"
@@ -180,7 +251,7 @@
       "status": "in_progress"
     },
     "entities/examples/TASK-005.md": {
-      "hash": "0afe2eab965771dffa484dfb3e4b035292703a4b0e1c89218d12a46d864437fc",
+      "hash": "c098b8b76b8347796bbf7dcddab0b18d107a0e573811b7e4c8bd960bd3bf728e",
       "lines": 156,
       "type": "entity",
       "purpose": "entity:task:TASK-005",
@@ -189,13 +260,13 @@
       "status": "pending"
     },
     "entities/org-epic.schema.md": {
-      "hash": "1ee1d06785f9fdec6d80900ffe8eed3c52cd6159c23ee86c0ab85cb09a944cef",
+      "hash": "8a12080b60ff7ef75a66b693da8f5006060bed2ddd00efc35ed89d319081d034",
       "lines": 176,
       "type": "schema",
       "purpose": "schema:org-epic"
     },
     "entities/repo-sprint.schema.md": {
-      "hash": "d7453465a031d382a2b24bdeda0c9368db3ef1f1529f37be33b2ae85a970bb63",
+      "hash": "1a6b177742482997c68d9695b37bdbded8ed1e77fa3fd44e2c8940d3d13a14e4",
       "lines": 228,
       "type": "schema",
       "purpose": "schema:repo-sprint"
@@ -213,22 +284,178 @@
       "purpose": "schema:subtask"
     },
     "entities/task.schema.md": {
-      "hash": "cecd72d00d876b4bfceafdd00c85f74b347d1cd75de9442caa7ac8e54cf23931",
-      "lines": 217,
+      "hash": "5bd3d44c47998fd69d4fdaef1be4a7ce8ec5289d1ab2ea9323152353d2589683",
+      "lines": 221,
       "type": "schema",
       "purpose": "schema:task"
     },
     "lib/README.md": {
-      "hash": "77fb1db93048362670140e97090249d43f6ca375f283e6354c1cb3482cb656e7",
+      "hash": "42aa4687290d7d9cdcb9b87bdb0d867daf7d4ae8513be94f9cb6a32962509958",
       "lines": 58,
       "type": "doc",
       "purpose": "doc:README"
     },
+    "lib/__init__.py": {
+      "hash": "3984f5c7dded76635c3943c3b7ac91aed3b66c2d4b295e97eff793e541680422",
+      "lines": 22,
+      "type": "doc",
+      "purpose": "doc:__init__"
+    },
+    "lib/agent_tools.py": {
+      "hash": "2c6dc030cf525b93efb472ebe89505f00dcb44f0e59e138a9d6e4946d6447851",
+      "lines": 203,
+      "type": "doc",
+      "purpose": "doc:agent_tools"
+    },
+    "lib/architecture.py": {
+      "hash": "c277022c38f23b4d2c8037e4563031edad586897500f1cdf48655cd703c1297c",
+      "lines": 472,
+      "type": "doc",
+      "purpose": "doc:architecture"
+    },
+    "lib/assignment_algorithm.py": {
+      "hash": "7ac9230f10238b47053d66f9dac3f8b0c729934f45057dbff937c37d829a9694",
+      "lines": 438,
+      "type": "doc",
+      "purpose": "doc:assignment_algorithm"
+    },
+    "lib/chain_detector.py": {
+      "hash": "e26ab635b4f96d0cb1d6ceea42f535654def0c41fc0b7baef2eb6fe3a9dc0cfb",
+      "lines": 290,
+      "type": "doc",
+      "purpose": "doc:chain_detector"
+    },
+    "lib/frontmatter.py": {
+      "hash": "d297db3d54e5ebf2e99d79328a212cb762c43f3abe37ca7bb79db90bbcf686c3",
+      "lines": 118,
+      "type": "doc",
+      "purpose": "doc:frontmatter"
+    },
+    "lib/neon_docs/__init__.py": {
+      "hash": "189e2149349ad8d9d1b574afdf98c0c905725f80317f2dd742eef40fb54ebec7",
+      "lines": 12,
+      "type": "doc",
+      "purpose": "doc:__init__"
+    },
+    "lib/neon_docs/chunker.py": {
+      "hash": "4debede93eeb15144e436805c33fbfec98e0772e143c1a3141275f9d95945bcb",
+      "lines": 86,
+      "type": "doc",
+      "purpose": "doc:chunker"
+    },
+    "lib/neon_docs/config.py": {
+      "hash": "ecfb047e156272d02d7302538e0d7875d1f7f762c9ab250b212ab62ca2dfc71f",
+      "lines": 76,
+      "type": "doc",
+      "purpose": "doc:config"
+    },
+    "lib/neon_docs/db.py": {
+      "hash": "36584a3dadb69120d5f38c3eac98ca807f7e82df0df2212494e7d30fc3aac477",
+      "lines": 76,
+      "type": "doc",
+      "purpose": "doc:db"
+    },
+    "lib/neon_docs/embedder.py": {
+      "hash": "321a7f227aecabdee7f529db44007b33c777c4c1e3947d5e889e95f4d74aaa81",
+      "lines": 65,
+      "type": "doc",
+      "purpose": "doc:embedder"
+    },
+    "lib/neon_docs/exceptions.py": {
+      "hash": "61497e42079ca376d958fde79cdb706fa83678adb40a840d260377189412609c",
+      "lines": 65,
+      "type": "doc",
+      "purpose": "doc:exceptions"
+    },
+    "lib/neon_docs/log.py": {
+      "hash": "d1589a4d94f0f81127f64b8352dbad8e0b75d3ea5bd0f407a3a797fccc9b0b4e",
+      "lines": 48,
+      "type": "doc",
+      "purpose": "doc:log"
+    },
+    "lib/neon_docs/migrate.py": {
+      "hash": "d23f3bc6acabb3b2a4eae70bf27aaf937361b0d8018bbc55abadda66f4deb0aa",
+      "lines": 91,
+      "type": "doc",
+      "purpose": "doc:migrate"
+    },
+    "lib/neon_docs/models.py": {
+      "hash": "c039cfcfca123484d9291038aabfa057641c09583ea792d18386c5d203255a43",
+      "lines": 93,
+      "type": "doc",
+      "purpose": "doc:models"
+    },
+    "lib/neon_docs/repository.py": {
+      "hash": "4b6df66aa227fdad1da9f0fd285a78536c42c3d22e0027734b1673f15a7d2997",
+      "lines": 204,
+      "type": "doc",
+      "purpose": "doc:repository"
+    },
+    "lib/neon_docs/tokenizer.py": {
+      "hash": "d540a590f2e9a785acd4f3be2b33841cd2c380f79beab11a09e709345f3963a1",
+      "lines": 24,
+      "type": "doc",
+      "purpose": "doc:tokenizer"
+    },
+    "lib/neon_docs/tracer.py": {
+      "hash": "cc4f811492e5485d48d2b2327ad03c2c3deede82a849a8a8cbcc8965bcb61193",
+      "lines": 83,
+      "type": "doc",
+      "purpose": "doc:tracer"
+    },
+    "lib/neon_docs/worker.py": {
+      "hash": "4dee2207f4f524c6ed45518ff5cb7d2490db53fe776d15c3122422e2978927ae",
+      "lines": 57,
+      "type": "doc",
+      "purpose": "doc:worker"
+    },
+    "lib/prompt_adapter.py": {
+      "hash": "5917603271dc1c437d7b99da5162e54bf63010d2228283f9d0c21188a848f908",
+      "lines": 302,
+      "type": "doc",
+      "purpose": "doc:prompt_adapter"
+    },
+    "lib/review_generator.py": {
+      "hash": "2f19aa0402ed62918e83f78b98f4b4a76fe3e9abd915b4313ab7a5e0805e7485",
+      "lines": 400,
+      "type": "doc",
+      "purpose": "doc:review_generator"
+    },
+    "lib/tools.py": {
+      "hash": "5ad4d21fcb9146457606cee932a56f6ec7e400f8a804ca323694c00dd741947c",
+      "lines": 214,
+      "type": "doc",
+      "purpose": "doc:tools"
+    },
+    "lib/validators.py": {
+      "hash": "1d47bb84d092ae3449ff4f45fe24239e95b8efbda60f4255459cfe2abea4e87e",
+      "lines": 159,
+      "type": "doc",
+      "purpose": "doc:validators"
+    },
     "scripts/architecture/PROMPT.md": {
-      "hash": "13f80a53b42379263915cd9ce0dcf3fcba14cce9f25dc39206ad47bd513c38b9",
+      "hash": "3ea6f53d49716d01ff2c6d0abb70a57c0e667c611e425db175d158ab1548c99d",
       "lines": 127,
       "type": "doc",
       "purpose": "doc:PROMPT"
+    },
+    "scripts/architecture/generate.py": {
+      "hash": "b1fd814e11414b747fb2597aae2c45c3581c201e32b35db7098efc194c7e6881",
+      "lines": 156,
+      "type": "doc",
+      "purpose": "doc:generate"
+    },
+    "scripts/neon-cache-check.sh": {
+      "hash": "d79ddfe0ebc5868ddbb35ce056ad8f422f1bec381fc6cde61c5fbe9bf41502da",
+      "lines": 33,
+      "type": "script",
+      "purpose": "script:neon-cache-check"
+    },
+    "scripts/neon-cache-store.sh": {
+      "hash": "733b9fa64a0efb656dac95002b94754fad7c78d017e84bbb9862e55c83243afb",
+      "lines": 27,
+      "type": "script",
+      "purpose": "script:neon-cache-store"
     },
     "scripts/setup-github-project.sh": {
       "hash": "136b266e33eed2dbe90d4b9f9c1830cc071fc85c47902d1ae3536ca4c03913e8",
@@ -248,6 +475,90 @@
       "type": "test",
       "purpose": "test:claude-code-alignment"
     },
+    "tests/neon_docs/__init__.py": {
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lines": 0,
+      "type": "test",
+      "purpose": "test:__init__"
+    },
+    "tests/neon_docs/conftest.py": {
+      "hash": "ae392188f267041ebf42f9b3354a4d10ff5bc67b1611b73e9c86ea8a1caa878a",
+      "lines": 57,
+      "type": "test",
+      "purpose": "test:conftest"
+    },
+    "tests/neon_docs/test_chunker.py": {
+      "hash": "1276d7af128ce64817602be38c4e99d2c2624cb22d1ee403b70266bb2c9bac6b",
+      "lines": 44,
+      "type": "test",
+      "purpose": "test:test_chunker"
+    },
+    "tests/neon_docs/test_config.py": {
+      "hash": "26955e1760b26a2c0a91a62fa222ff51fc8cf4abc17de4968b21c41d93c1ccb9",
+      "lines": 40,
+      "type": "test",
+      "purpose": "test:test_config"
+    },
+    "tests/neon_docs/test_db.py": {
+      "hash": "928b6b1fe1ed52dbb5ce1b3561b6b948b8436ca6e1eef6978a60dc0bd25ff4f6",
+      "lines": 30,
+      "type": "test",
+      "purpose": "test:test_db"
+    },
+    "tests/neon_docs/test_embedder.py": {
+      "hash": "1b0454a54146d7e681f22b932973021d1b7fb466175e9f419085f6d85e8ac2c9",
+      "lines": 42,
+      "type": "test",
+      "purpose": "test:test_embedder"
+    },
+    "tests/neon_docs/test_exceptions.py": {
+      "hash": "b6c769e411258a957964364075c2836bd33af1b6fd8c0cc13927d7a38046cecb",
+      "lines": 42,
+      "type": "test",
+      "purpose": "test:test_exceptions"
+    },
+    "tests/neon_docs/test_hooks.sh": {
+      "hash": "fc907db46c1e6b60eb4dcd6d510f1b3da6f9ac87cbdd622c340cb5754210fdac",
+      "lines": 27,
+      "type": "test",
+      "purpose": "test:test_hooks"
+    },
+    "tests/neon_docs/test_migrate.py": {
+      "hash": "2100a45ff024a3d07ecf0be8d8ae12ecd04ea3ad413ba342d0099ecd7aae8ec3",
+      "lines": 18,
+      "type": "test",
+      "purpose": "test:test_migrate"
+    },
+    "tests/neon_docs/test_models.py": {
+      "hash": "50cbf9a50d7615de9d2d8f18f70933b9b0e7a23abe2aed36d69921abaa80e886",
+      "lines": 44,
+      "type": "test",
+      "purpose": "test:test_models"
+    },
+    "tests/neon_docs/test_repository.py": {
+      "hash": "8a53cf44dd48f0525060de807316d4cc1e30b6a5c4504f383bacf2f4817a8770",
+      "lines": 58,
+      "type": "test",
+      "purpose": "test:test_repository"
+    },
+    "tests/neon_docs/test_tokenizer.py": {
+      "hash": "8b0822cf8d57b40a9823a7989407fdb1bf75176634e34ee499206e58284e5d6a",
+      "lines": 27,
+      "type": "test",
+      "purpose": "test:test_tokenizer"
+    },
+    "tests/neon_docs/test_tracer.py": {
+      "hash": "f9bc2d7a9120ef95f0d7be9ae67b10bb68803cc7d977bff5b79a60c7a9951585",
+      "lines": 32,
+      "type": "test",
+      "purpose": "test:test_tracer"
+    },
+    "tests/neon_docs/test_worker.py": {
+      "hash": "b106123ce153f7e49715845e444fcf5ab457826c739c05bb53572613c9334f16",
+      "lines": 27,
+      "type": "test",
+      "purpose": "test:test_worker"
+    },
     "tests/run-tests.sh": {
       "hash": "0c34dc3febcd1d862ee0969e142d2f8e8d5d3bf1eb960c50df9f17acd7eb361b",
       "lines": 157,
@@ -263,68 +574,78 @@
   },
   "directories": {
     ".": {
-      "hash": "a019073161fdb5cf26e144509d3465a6879ef490a320801f9b7ad95806e9d530",
+      "hash": "590bf054497ea4fb64473e4950da596bc21b30ff1125f52f27b26372340a0672",
       "files": 5,
       "dirs": 6
     },
     ".claude/commands": {
-      "hash": "601ee6d7f1026f2e700c74953fd8c153951abd8b8b68f821f6178f805b08bff8",
-      "files": 2,
+      "hash": "6272e553db85bbeb332ff6457c0905393b2571b5370db6e10c26270592b018b9",
+      "files": 3,
       "dirs": 0
     },
     ".claude/skills": {
-      "hash": "14b0eef771e02e77bae4c5030c6c0cb2d9878ffda87ebeafe8a7ef275e11117b",
-      "files": 2,
+      "hash": "c1b7bb74b0d6e3a5c0cb26c6337bacc1fc03c00b936a78759be33b2e280f8337",
+      "files": 3,
       "dirs": 0
     },
     "agents": {
-      "hash": "4f3e191b3b506fbd94c2187c00681b26342d51221c4dd60f3df56b76105402ca",
-      "files": 4,
+      "hash": "6413342ea0ca4f414e3c57e2376a61d6d37965454da9b70e08f3198306e60b18",
+      "files": 11,
       "dirs": 0
     },
     "docs": {
-      "hash": "b0761b53ad04e19c26a65a1078cc9706fe4ecd5fd50fc0337ea447266aef3462",
+      "hash": "81c941f81562dfc1e11823ade2d6a6ac2f8c1591cccc584f16af2b44f7d05ddc",
       "files": 1,
       "dirs": 2
     },
     "docs/fetch": {
-      "hash": "8c7cd20f5d62fb9ae2d47e0814a28a0df6351af920edd5ccaff8a6fd80711bd7",
+      "hash": "70185e1e2e6dc2dd4af4b0ea045afe8ae4d63c73551c6a7ebdb5ae334d9c7427",
       "files": 7,
       "dirs": 0
     },
     "docs/research": {
-      "hash": "a99c68bd7bacb23f5d1c24b307f67a4f08377532036221acf29ac2927bcfce0b",
+      "hash": "fa3989dc30c4f52ec893a46501da216dd1c86536fad0e6c59ab4ca5ee0c27411",
       "files": 2,
       "dirs": 0
     },
     "entities": {
-      "hash": "1ec693eee9042626a3a9a913a08f27db51a736ffca3edbaeb86a35fe1ef542ac",
+      "hash": "3dbfa846f590bc902ffcf8d687389a54d2b925e2731057860c399ac32fd3c008",
       "files": 7,
       "dirs": 1
     },
     "entities/examples": {
-      "hash": "6d14f80b4fd1c531d4284d508d76aaa2505006e155007648727fefa72dec3b35",
+      "hash": "d71da2d44594df898c54623b29ee06aa25c99fc68dc7abef1fa81991f9886c74",
       "files": 3,
       "dirs": 0
     },
     "lib": {
-      "hash": "a58d0063d196c0108a1ceb015d824d02ffd55f9eb2aeb6fa2ae7046875dbea81",
-      "files": 1,
+      "hash": "650f1b5801281f9bc27ae3bd68d990d80fe8971005e9a44895d33c6cbfbaf7e4",
+      "files": 11,
+      "dirs": 1
+    },
+    "lib/neon_docs": {
+      "hash": "5d71bd476c761a3c89e1166628acaa784b70e57f330bb9e84bffe6f37c6df7e2",
+      "files": 13,
       "dirs": 0
     },
     "scripts": {
-      "hash": "4783784a3d1bc4293bcd069ec7f01be16fea8a7ec26458d0452124ea1fdb53a7",
-      "files": 1,
+      "hash": "d98194ac5b1b1431bdfe169903fdca679f1d57bcbb9513b57d2d0bd7cd4aa2a9",
+      "files": 3,
       "dirs": 1
     },
     "scripts/architecture": {
-      "hash": "feb07135592aa2b5de45c90027d5d24348a7f1486dcbef784e8adf5deff80c5b",
-      "files": 1,
+      "hash": "16da8631564b480156f2bc3611ece0158dfdced5b97d95144ae2b06be90538aa",
+      "files": 2,
       "dirs": 0
     },
     "tests": {
       "hash": "d7d0d0d6cb3b3032de6e760ea130588ad0ad3d77e453e5ae8e2f4a46abf1b1e6",
       "files": 4,
+      "dirs": 1
+    },
+    "tests/neon_docs": {
+      "hash": "eaa7a699183bf58eb36ed2803d5d7cf015fee987a2a7da9b8bb9fca0ddad5be2",
+      "files": 14,
       "dirs": 0
     }
   },
@@ -363,6 +684,13 @@
           "ceremonies"
         ],
         "file": "agents/sprint-master.md"
+      },
+      "neon-specialist": {
+        "model": "opus",
+        "owns": [
+          "documents"
+        ],
+        "file": "agents/neon-specialist.md"
       }
     },
     "entityHierarchy": [
