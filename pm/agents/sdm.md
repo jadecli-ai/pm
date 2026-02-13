@@ -5,6 +5,7 @@ model: claude-opus-4-6
 memory: project
 tools:
   - Task(staff-engineer)
+  - Task(neon-specialist)
   - Read
   - Write
   - Edit
@@ -14,6 +15,12 @@ tools:
   - mcp__memory__*
   - mcp__git__*
 hooks:
+  PreToolUse:
+    - matcher: WebFetch
+      command: "pm/scripts/neon-cache-check.sh"
+  PostToolUse:
+    - matcher: WebFetch
+      command: "pm/scripts/neon-cache-store.sh"
   TeammateIdle:
     - command: "echo '[sdm] Staff engineer idle — checking for unassigned tasks'"
   TaskCompleted:
