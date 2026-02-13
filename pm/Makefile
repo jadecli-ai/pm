@@ -165,6 +165,36 @@ review-l3-implement: ## L3-Review: Full pipeline + parallel implementation
 review: review-l2-full ## Alias: Full review pipeline (L2)
 
 # ============================================================================
+# DOCUMENT PIPELINE (Neon document caching)
+# ============================================================================
+
+.PHONY: l0-doc-store l0-doc-search l0-doc-process l0-doc-status
+.PHONY: l1-doc-index l1-doc-drain l1-doc-migrate
+
+NEON_CLI = PYTHONPATH=. python3 -m lib.neon_docs
+
+l0-doc-store: ## L0-Doc: Store single document (FILE= or URL=)
+	@$(NEON_CLI) store $(if $(URL),--url "$(URL)",--file "$(FILE)")
+
+l0-doc-search: ## L0-Doc: Search documents (QUERY=)
+	@$(NEON_CLI) search "$(QUERY)" --limit $(or $(LIMIT),5)
+
+l0-doc-process: ## L0-Doc: Process one queue item
+	@$(NEON_CLI) process-queue
+
+l0-doc-status: ## L0-Doc: Show cache statistics
+	@$(NEON_CLI) status
+
+l1-doc-index: ## L1-Doc: Bulk-index docs/crawler-improvements/
+	@$(NEON_CLI) bulk-index ../docs/crawler-improvements/
+
+l1-doc-drain: ## L1-Doc: Drain entire processing queue
+	@$(NEON_CLI) process-queue
+
+l1-doc-migrate: ## L1-Doc: Run schema migrations
+	@$(NEON_CLI) migrate
+
+# ============================================================================
 # SHORTCUTS (ergonomic aliases)
 # ============================================================================
 
