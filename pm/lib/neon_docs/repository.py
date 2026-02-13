@@ -33,7 +33,10 @@ async def upsert_document(
         async with connection() as conn:
             row = await conn.fetchrow(
                 "SELECT * FROM upsert_document($1, $2, $3, $4)",
-                url, file_path, title, content,
+                url,
+                file_path,
+                title,
+                content,
             )
             if row is None:
                 raise QueryError("upsert_document returned no rows")
@@ -68,7 +71,10 @@ async def search(
     async with connection() as conn:
         rows = await conn.fetch(
             "SELECT * FROM search_documents($1::vector, $2, $3, $4)",
-            embedding_str, keyword, limit, threshold,
+            embedding_str,
+            keyword,
+            limit,
+            threshold,
         )
         return [
             SearchResult(
@@ -125,7 +131,8 @@ async def fail_queue_job(job_id: int, error: str) -> None:
     async with connection() as conn:
         await conn.execute(
             "UPDATE processing_queue SET status = 'failed', error_message = $1 WHERE id = $2",
-            error[:500], job_id,
+            error[:500],
+            job_id,
         )
 
 
@@ -158,13 +165,17 @@ async def insert_chunks(
 ) -> int:
     """Insert chunks with embeddings for a document."""
     async with connection() as conn:
-        for i, (chunk, embedding, tokens) in enumerate(zip(chunks, embeddings, token_counts)):
+        for i, (chunk, embedding, tokens) in enumerate(zip(chunks, embeddings, token_counts, strict=True)):
             embedding_str = "[" + ",".join(str(x) for x in embedding) + "]"
             await conn.execute(
                 """INSERT INTO document_chunks
                    (document_id, chunk_index, content, embedding, token_count)
                    VALUES ($1, $2, $3, $4::vector, $5)""",
-                doc_id, i, chunk, embedding_str, tokens,
+                doc_id,
+                i,
+                chunk,
+                embedding_str,
+                tokens,
             )
         return len(chunks)
 
@@ -183,12 +194,8 @@ async def get_status() -> CacheStatus:
     async with connection() as conn:
         doc_count = await conn.fetchval("SELECT COUNT(*) FROM crawled_documents")
         chunk_count = await conn.fetchval("SELECT COUNT(*) FROM document_chunks")
-        pending = await conn.fetchval(
-            "SELECT COUNT(*) FROM processing_queue WHERE status = 'pending'"
-        )
-        failed = await conn.fetchval(
-            "SELECT COUNT(*) FROM processing_queue WHERE status = 'failed'"
-        )
+        pending = await conn.fetchval("SELECT COUNT(*) FROM processing_queue WHERE status = 'pending'")
+        failed = await conn.fetchval("SELECT COUNT(*) FROM processing_queue WHERE status = 'failed'")
         return CacheStatus(
             documents=doc_count or 0,
             chunks=chunk_count or 0,

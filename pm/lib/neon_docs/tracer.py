@@ -9,7 +9,8 @@ from __future__ import annotations
 
 import functools
 import time
-from typing import Any, Callable, TypeVar
+from collections.abc import Callable
+from typing import Any, TypeVar
 
 from .log import get_logger
 
@@ -17,6 +18,7 @@ logger = get_logger("tracer")
 
 try:
     import mlflow
+
     MLFLOW_AVAILABLE = True
 except ImportError:
     MLFLOW_AVAILABLE = False
@@ -33,6 +35,7 @@ def trace_operation(name: str) -> Callable[[F], F]:
     Returns:
         Decorated function.
     """
+
     def decorator(func: F) -> F:
         @functools.wraps(func)
         async def wrapper(*args: Any, **kwargs: Any) -> Any:
@@ -67,6 +70,7 @@ def trace_operation(name: str) -> Callable[[F], F]:
                     raise
 
         return wrapper  # type: ignore[return-value]
+
     return decorator
 
 

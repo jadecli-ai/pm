@@ -5,8 +5,6 @@ from lib.neon_docs.models import (
     CacheCheckResult,
     CacheStatus,
     CrawledDocument,
-    DocumentChunk,
-    QueueJob,
     QueueStatus,
     SearchResult,
     UpsertAction,

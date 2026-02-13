@@ -67,9 +67,7 @@ async def run_migrations() -> list[str]:
             logger.info("Applying: %s", mf.name)
             sql = mf.read_text(encoding="utf-8")
             await conn.execute(sql)
-            await conn.execute(
-                "INSERT INTO _migrations (name) VALUES ($1)", mf.name
-            )
+            await conn.execute("INSERT INTO _migrations (name) VALUES ($1)", mf.name)
             newly_applied.append(mf.name)
             logger.info("Applied: %s", mf.name)
 

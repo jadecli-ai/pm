@@ -6,7 +6,7 @@ from __future__ import annotations
 from datetime import datetime
 from enum import StrEnum
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class QueueStatus(StrEnum):
@@ -24,6 +24,7 @@ class UpsertAction(StrEnum):
 
 class CrawledDocument(BaseModel):
     """A cached document from URL or file."""
+
     id: int
     url: str | None = None
     file_path: str | None = None
@@ -37,6 +38,7 @@ class CrawledDocument(BaseModel):
 
 class DocumentChunk(BaseModel):
     """An embedded chunk of a document."""
+
     id: int
     document_id: int
     chunk_index: int
@@ -46,6 +48,7 @@ class DocumentChunk(BaseModel):
 
 class QueueJob(BaseModel):
     """A processing queue entry."""
+
     id: int
     document_id: int
     operation: str = "chunk_and_embed"
@@ -57,12 +60,14 @@ class QueueJob(BaseModel):
 
 class UpsertResult(BaseModel):
     """Result from upsert_document()."""
+
     action: UpsertAction
     doc_id: int
 
 
 class SearchResult(BaseModel):
     """A single search result."""
+
     doc_id: int
     title: str | None = None
     chunk_text: str
@@ -73,6 +78,7 @@ class SearchResult(BaseModel):
 
 class CacheStatus(BaseModel):
     """Cache statistics."""
+
     documents: int
     chunks: int
     queue_pending: int
@@ -81,6 +87,7 @@ class CacheStatus(BaseModel):
 
 class CacheCheckResult(BaseModel):
     """Result from cache URL check."""
+
     hit: bool
     content: str | None = None
     doc_id: int | None = None

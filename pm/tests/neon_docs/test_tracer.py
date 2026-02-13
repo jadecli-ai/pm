@@ -19,6 +19,7 @@ class TestTraceDecorator:
             raise ValueError("test error")
 
         import pytest
+
         with pytest.raises(ValueError, match="test error"):
             await failing_func()
 
