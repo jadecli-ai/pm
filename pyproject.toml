@@ -1,0 +1,56 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pm-neon-docs"
+version = "0.1.0"
+description = "Neon-backed document caching and semantic search for PM agents"
+requires-python = ">=3.11"
+dependencies = [
+    "asyncpg>=0.29.0",
+    "httpx>=0.27.0",
+    "mlflow>=3.9.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "python-dotenv>=1.0.0",
+    "tenacity>=8.2.0",
+    "tiktoken>=0.7.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.6.0",
+    "pyright>=1.1.380",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["pm/lib/neon_docs"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "A", "SIM"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["lib"]
+
+[tool.pyright]
+pythonVersion = "3.11"
+typeCheckingMode = "standard"
+include = ["pm/lib/neon_docs"]
+reportMissingTypeStubs = false
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["pm/tests"]
+pythonpath = ["pm"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+markers = [
+    "live: requires live Neon database and/or Ollama",
+]

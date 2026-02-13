@@ -165,10 +165,86 @@ review-l3-implement: ## L3-Review: Full pipeline + parallel implementation
 review: review-l2-full ## Alias: Full review pipeline (L2)
 
 # ============================================================================
+# DOCUMENT PIPELINE (Neon document caching)
+# ============================================================================
+
+.PHONY: l0-doc-store l0-doc-search l0-doc-process l0-doc-status
+.PHONY: l1-doc-index l1-doc-drain l1-doc-migrate
+
+NEON_CLI = PYTHONPATH=. python3 -m lib.neon_docs
+
+l0-doc-store: ## L0-Doc: Store single document (FILE= or URL=)
+	@$(NEON_CLI) store $(if $(URL),--url "$(URL)",--file "$(FILE)")
+
+l0-doc-search: ## L0-Doc: Search documents (QUERY=)
+	@$(NEON_CLI) search "$(QUERY)" --limit $(or $(LIMIT),5)
+
+l0-doc-process: ## L0-Doc: Process one queue item
+	@$(NEON_CLI) process-queue
+
+l0-doc-status: ## L0-Doc: Show cache statistics
+	@$(NEON_CLI) status
+
+l1-doc-index: ## L1-Doc: Bulk-index docs/crawler-improvements/
+	@$(NEON_CLI) bulk-index ../docs/crawler-improvements/
+
+l1-doc-drain: ## L1-Doc: Drain entire processing queue
+	@$(NEON_CLI) process-queue
+
+l1-doc-migrate: ## L1-Doc: Run schema migrations
+	@$(NEON_CLI) migrate
+
+.PHONY: l2-doc-refresh l2-doc-reindex
+.PHONY: l3-doc-setup
+
+l2-doc-refresh: ## L2-Doc: Re-index all docs (refresh stale)
+	@echo "▶ Document Refresh"
+	@$(MAKE) -s l1-doc-index
+	@$(MAKE) -s l1-doc-drain
+	@$(MAKE) -s l0-doc-status
+
+l2-doc-reindex: ## L2-Doc: Purge chunks + re-embed all
+	@echo "▶ Full Reindex"
+	@psql "$$PRJ_NEON_DATABASE_URL" -c "DELETE FROM document_chunks; UPDATE crawled_documents SET needs_processing = TRUE;"
+	@$(MAKE) -s l1-doc-drain
+
+l3-doc-setup: ## L3-Doc: Full bootstrap (migrate + index + drain + verify)
+	@echo "═══ Document Setup Pipeline ═══"
+	@$(MAKE) -s l1-doc-migrate
+	@echo "✓ Schema migrated"
+	@$(MAKE) -s l1-doc-index
+	@echo "✓ Documents indexed"
+	@$(MAKE) -s l1-doc-drain
+	@echo "✓ Queue drained"
+	@$(MAKE) -s l0-doc-status
+	@echo "═══ Setup Complete ═══"
+
+# ============================================================================
+# DASHBOARD PIPELINE (Vercel-style insights)
+# ============================================================================
+
+.PHONY: l0-dashboard l1-dashboard l2-pr-dashboard
+
+l0-dashboard: ## L0-Dash: Generate DASHBOARD.json
+	@python3 scripts/dashboard/generate.py
+
+l1-dashboard: ## L1-Dash: Generate + open in browser
+	@$(MAKE) -s l0-dashboard
+	@python3 -c "import webbrowser; webbrowser.open('file://$$(pwd)/DASHBOARD.html')" 2>/dev/null || echo "Open DASHBOARD.html manually"
+
+l2-pr-dashboard: ## L2-Dash: Generate + commit + push (for PR updates)
+	@$(MAKE) -s l0-dashboard
+	@git diff --quiet DASHBOARD.json 2>/dev/null || { \
+		git add DASHBOARD.json && \
+		git commit -m "chore(dashboard): update dashboard data" && \
+		git push && \
+		echo "✓ dashboard pushed"; }
+
+# ============================================================================
 # SHORTCUTS (ergonomic aliases)
 # ============================================================================
 
-.PHONY: test index arch validate check ci cd
+.PHONY: test index arch validate check ci cd docs-setup docs-status dashboard
 
 test: l0-test        ## Alias: run tests
 index: l1-index      ## Alias: check/update index
@@ -177,6 +253,9 @@ validate: l1-validate ## Alias: tests + index
 check: l2-pr-open    ## Alias: PR checks
 ci: l3-ci            ## Alias: CI pipeline
 cd: l3-cd            ## Alias: CD pipeline
+docs-setup: l3-doc-setup  ## Alias: full doc bootstrap
+docs-status: l0-doc-status ## Alias: cache stats
+dashboard: l1-dashboard ## Alias: generate + open dashboard
 
 # ============================================================================
 # HELP
@@ -200,5 +279,11 @@ help: ## Show this help
 	@echo "Review Pipeline:"
 	@grep -E '^review-l[0-3]-[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/'
 	@echo ""
+	@echo "Document Pipeline:"
+	@grep -E '^l[0-3]-doc-[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/'
+	@echo ""
+	@echo "Dashboard Pipeline:"
+	@grep -E '^l[0-3]-dashboard[a-z-]*:.*##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/'
+	@echo ""
 	@echo "Shortcuts:"
-	@grep -E '^(test|index|arch|validate|check|ci|cd|review):.*##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/'
+	@grep -E '^(test|index|arch|validate|check|ci|cd|review|docs-setup|docs-status|dashboard):.*##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/'

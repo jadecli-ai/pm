@@ -12,6 +12,13 @@ tools:
   - Grep
   - WebSearch
   - WebFetch
+hooks:
+  PreToolUse:
+    - matcher: WebFetch
+      command: "pm/scripts/neon-cache-check.sh"
+  PostToolUse:
+    - matcher: WebFetch
+      command: "pm/scripts/neon-cache-store.sh"
 ---
 
 # Staff Engineer Agent

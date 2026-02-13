@@ -131,6 +131,17 @@ def log_comparison(
         mlflow.log_artifact("/tmp/kimi_output.txt")
 
 
+def setup_claude_autolog() -> None:
+    """Enable MLflow 3.9 Anthropic autolog for Claude tracing."""
+    if MLFLOW_AVAILABLE and hasattr(mlflow, "anthropic"):
+        mlflow.anthropic.autolog()
+        print("[MLflow] Claude autolog enabled (3.9+)")
+    elif MLFLOW_AVAILABLE:
+        print("[MLflow] anthropic.autolog not available — upgrade to mlflow>=3.9")
+    else:
+        print("[MLflow] Not installed")
+
+
 def get_mlflow_status() -> Dict[str, Any]:
     """Get MLflow availability and configuration status.
 

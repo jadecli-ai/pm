@@ -1,0 +1,25 @@
+name: Dashboard
+on:
+  pull_request:
+    types: [opened, synchronize]
+  push:
+    branches: ['feat/*', 'fix/*']
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v4
+      - run: uv venv .venv && uv pip install pydantic pydantic-settings python-dotenv
+      - name: Generate dashboard data
+        working-directory: pm
+        run: python3 scripts/dashboard/generate.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dashboard
+          path: |
+            pm/DASHBOARD.json
+            pm/DASHBOARD.html

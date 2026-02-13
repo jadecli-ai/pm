@@ -1,0 +1,399 @@
+{
+  "generated": "2026-02-13T17:51:19.980799+00:00",
+  "database": {
+    "connected": true,
+    "documents": 28,
+    "chunks": 313,
+    "queue_pending": 0,
+    "queue_failed": 3
+  },
+  "architecture": {
+    "merkle_root": "ffade74de75b3bb45a7e0877b6dda8be80357f4c3ca51edaeb62e7c0b0aad7d3",
+    "file_count": 89,
+    "agents": [
+      {
+        "name": "assignment-manager",
+        "model": ""
+      },
+      {
+        "name": "mlflow-analyzer",
+        "model": ""
+      },
+      {
+        "name": "neon-specialist",
+        "model": ""
+      },
+      {
+        "name": "review-synthesizer",
+        "model": ""
+      },
+      {
+        "name": "sdm",
+        "model": ""
+      },
+      {
+        "name": "sprint-master",
+        "model": ""
+      },
+      {
+        "name": "staff-engineer",
+        "model": ""
+      },
+      {
+        "name": "steering-orchestrator",
+        "model": ""
+      },
+      {
+        "name": "test-reviewer",
+        "model": ""
+      },
+      {
+        "name": "value-reviewer",
+        "model": ""
+      },
+      {
+        "name": "vp-product",
+        "model": ""
+      }
+    ],
+    "layers": {}
+  },
+  "branch": {
+    "name": "main",
+    "base": "origin/main",
+    "commits_ahead": 47,
+    "commit_types": {
+      "feat": 31,
+      "test": 6,
+      "docs": 4,
+      "ci": 3,
+      "chore": 3
+    },
+    "scopes": {
+      "neon": 31,
+      "agents": 4,
+      "infra": 3,
+      "plans": 3,
+      "index": 1,
+      "deps": 1,
+      "tracing": 1
+    },
+    "insertions": 7414,
+    "deletions": 116,
+    "files_changed": 55,
+    "directories": {
+      "pm/lib/": 17,
+      "pm/tests/": 15,
+      "pm/agents/": 4,
+      ".github/workflows/": 3,
+      "pm/.index/": 3,
+      "pm/scripts/": 3,
+      "docs/plans/": 2,
+      ".claude/settings.json/": 1,
+      ".claude/skills/": 1,
+      ".env.example": 1,
+      ".gitignore": 1,
+      "lib/mlflow_tracing.py/": 1,
+      "pm/Makefile/": 1,
+      "pyproject.toml": 1,
+      "requirements.txt": 1
+    },
+    "files": [
+      {
+        "status": "M",
+        "path": ".claude/settings.json"
+      },
+      {
+        "status": "A",
+        "path": ".claude/skills/neon-release/SKILL.md"
+      },
+      {
+        "status": "M",
+        "path": ".env.example"
+      },
+      {
+        "status": "A",
+        "path": ".github/workflows/ci.yml"
+      },
+      {
+        "status": "A",
+        "path": ".github/workflows/lint.yml"
+      },
+      {
+        "status": "A",
+        "path": ".github/workflows/test.yml"
+      },
+      {
+        "status": "M",
+        "path": ".gitignore"
+      },
+      {
+        "status": "A",
+        "path": "docs/plans/2026-02-12-neon-specialist-agent-design.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/plans/2026-02-12-neon-specialist-implementation-plan.md"
+      },
+      {
+        "status": "M",
+        "path": "lib/mlflow_tracing.py"
+      },
+      {
+        "status": "M",
+        "path": "pm/.index/AGENT-INDEX.md"
+      },
+      {
+        "status": "M",
+        "path": "pm/.index/generate-merkle.py"
+      },
+      {
+        "status": "M",
+        "path": "pm/.index/merkle-tree.json"
+      },
+      {
+        "status": "M",
+        "path": "pm/Makefile"
+      },
+      {
+        "status": "A",
+        "path": "pm/agents/neon-specialist.md"
+      },
+      {
+        "status": "M",
+        "path": "pm/agents/sdm.md"
+      },
+      {
+        "status": "M",
+        "path": "pm/agents/staff-engineer.md"
+      },
+      {
+        "status": "M",
+        "path": "pm/agents/vp-product.md"
+      },
+      {
+        "status": "A",
+        "path": "pm/lib/neon_docs/__init__.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/lib/neon_docs/__main__.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/lib/neon_docs/chunker.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/lib/neon_docs/cli.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/lib/neon_docs/config.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/lib/neon_docs/db.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/lib/neon_docs/embedder.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/lib/neon_docs/exceptions.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/lib/neon_docs/log.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/lib/neon_docs/migrate.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/lib/neon_docs/migrations/V001_initial_schema.sql"
+      },
+      {
+        "status": "A",
+        "path": "pm/lib/neon_docs/migrations/V002_fix_bytea_cast.sql"
+      },
+      {
+        "status": "A",
+        "path": "pm/lib/neon_docs/models.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/lib/neon_docs/repository.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/lib/neon_docs/tokenizer.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/lib/neon_docs/tracer.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/lib/neon_docs/worker.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/scripts/neon-cache-check.sh"
+      },
+      {
+        "status": "A",
+        "path": "pm/scripts/neon-cache-store.sh"
+      },
+      {
+        "status": "A",
+        "path": "pm/scripts/phase8_bootstrap.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/tests/neon_docs/__init__.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/tests/neon_docs/conftest.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/tests/neon_docs/test_chunker.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/tests/neon_docs/test_cli.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/tests/neon_docs/test_config.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/tests/neon_docs/test_db.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/tests/neon_docs/test_embedder.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/tests/neon_docs/test_exceptions.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/tests/neon_docs/test_hooks.sh"
+      },
+      {
+        "status": "A",
+        "path": "pm/tests/neon_docs/test_migrate.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/tests/neon_docs/test_models.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/tests/neon_docs/test_repository.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/tests/neon_docs/test_tokenizer.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/tests/neon_docs/test_tracer.py"
+      },
+      {
+        "status": "A",
+        "path": "pm/tests/neon_docs/test_worker.py"
+      },
+      {
+        "status": "A",
+        "path": "pyproject.toml"
+      },
+      {
+        "status": "M",
+        "path": "requirements.txt"
+      }
+    ]
+  },
+  "pr": {
+    "number": null,
+    "title": "",
+    "url": "",
+    "state": "",
+    "phases": [
+      {
+        "id": 0,
+        "name": "Infrastructure",
+        "status": "completed",
+        "commits": 3
+      },
+      {
+        "id": 1,
+        "name": "Database Layer",
+        "status": "completed",
+        "commits": 6
+      },
+      {
+        "id": 2,
+        "name": "Embedder & Chunker",
+        "status": "completed",
+        "commits": 5
+      },
+      {
+        "id": 3,
+        "name": "Neon CLI",
+        "status": "completed",
+        "commits": 43
+      },
+      {
+        "id": 4,
+        "name": "Tracing",
+        "status": "completed",
+        "commits": 6
+      },
+      {
+        "id": 5,
+        "name": "Hooks",
+        "status": "completed",
+        "commits": 6
+      },
+      {
+        "id": 6,
+        "name": "Makefile",
+        "status": "completed",
+        "commits": 2
+      },
+      {
+        "id": 7,
+        "name": "Agents",
+        "status": "completed",
+        "commits": 5
+      },
+      {
+        "id": 8,
+        "name": "Bootstrap",
+        "status": "completed",
+        "commits": 3
+      },
+      {
+        "id": 9,
+        "name": "CI",
+        "status": "completed",
+        "commits": 12
+      }
+    ],
+    "commit_types": {
+      "feat": 31,
+      "test": 6,
+      "docs": 4,
+      "ci": 3,
+      "chore": 3
+    }
+  }
+}

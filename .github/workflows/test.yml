@@ -1,0 +1,15 @@
+name: Test
+on:
+  push:
+    paths: ['pm/lib/neon_docs/**', 'pm/tests/neon_docs/**']
+  pull_request:
+    paths: ['pm/lib/neon_docs/**', 'pm/tests/neon_docs/**']
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
+      - run: uv venv .venv && uv pip install -e ".[dev]"
+      - run: .venv/bin/python3 -m pytest pm/tests/neon_docs/ -v -m "not live" --tb=short

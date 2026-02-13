@@ -70,7 +70,7 @@ def build_index() -> dict:
     file_hashes = {}
 
     # Index all files
-    for ext in ["*.md", "*.sh"]:
+    for ext in ["*.md", "*.sh", "*.py"]:
         for path in PM_DIR.rglob(ext):
             if ".index" in str(path) or ".git" in str(path):
                 continue
@@ -148,6 +148,7 @@ def build_index() -> dict:
                 "sdm": {"model": "sonnet", "owns": ["stories", "tasks"], "file": "agents/sdm.md"},
                 "staff-engineer": {"model": "sonnet", "owns": ["tasks", "subtasks"], "file": "agents/staff-engineer.md"},
                 "sprint-master": {"model": "haiku", "owns": ["ceremonies"], "file": "agents/sprint-master.md"},
+                "neon-specialist": {"model": "opus", "owns": ["documents"], "file": "agents/neon-specialist.md"},
             },
             "entityHierarchy": ["epic", "story", "task", "subtask"],
             "schemas": {
@@ -183,7 +184,8 @@ pm/
 │   ├── vp-product.md      # Opus - owns Epics
 │   ├── sdm.md             # Sonnet - owns Stories/Tasks
 │   ├── staff-engineer.md  # Sonnet - owns Tasks/Subtasks
-│   └── sprint-master.md   # Haiku - ceremonies
+│   ├── sprint-master.md   # Haiku - ceremonies
+│   ├── neon-specialist.md # Opus - document caching
 ├── entities/              # Work item schemas
 │   ├── epic.schema.md     # Strategic initiatives
 │   ├── story.schema.md    # User features

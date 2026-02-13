@@ -7,7 +7,7 @@ google-genai>=1.0.0
 kimi-agent-sdk>=0.1.0  # Now available - supports 256K context, agent swarm
 
 # MLflow for performance tracking
-mlflow>=2.10.0
+mlflow>=3.9.0
 
 # Redis for coordination (optional)
 redis>=5.0.0
@@ -15,3 +15,10 @@ redis>=5.0.0
 # Additional utilities (REQUIRED)
 python-dotenv>=1.0.0  # For .env file support (REQUIRED for API key loading)
 pydantic>=2.0.0  # For schema validation
+
+# Neon document caching
+asyncpg>=0.29.0
+httpx>=0.27.0
+pydantic-settings>=2.0.0
+tenacity>=8.2.0
+tiktoken>=0.7.0
