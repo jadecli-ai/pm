@@ -23,7 +23,7 @@ class DatabaseError(NeonDocsError):
     is_retryable = True
 
 
-class ConnectionError(DatabaseError):
+class DbConnectionError(DatabaseError):
     """Could not connect to database."""
 
     is_retryable = True

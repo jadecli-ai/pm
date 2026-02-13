@@ -1,9 +1,8 @@
 # pm/tests/neon_docs/test_config.py
 """Tests for neon_docs configuration."""
 
-import os
-
 import pytest
+from pydantic import ValidationError
 
 from lib.neon_docs.config import NeonDocsSettings, get_settings, reset_settings
 
@@ -37,5 +36,5 @@ class TestNeonDocsSettings:
 
     def test_missing_database_url_raises(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.delenv("PRJ_NEON_DATABASE_URL", raising=False)
-        with pytest.raises(Exception):
+        with pytest.raises(ValidationError):
             NeonDocsSettings(_env_file=None)  # type: ignore[call-arg]

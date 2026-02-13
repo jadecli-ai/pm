@@ -2,9 +2,8 @@
 """Tests for exception hierarchy."""
 
 from lib.neon_docs.exceptions import (
-    ChunkingError,
-    ConnectionError,
     DatabaseError,
+    DbConnectionError,
     EmbeddingError,
     NeonDocsError,
     OllamaConnectionError,
@@ -21,7 +20,7 @@ class TestExceptionHierarchy:
 
     def test_database_error_is_retryable(self) -> None:
         assert DatabaseError.is_retryable is True
-        assert ConnectionError.is_retryable is True
+        assert DbConnectionError.is_retryable is True
 
     def test_query_error_not_retryable(self) -> None:
         assert QueryError.is_retryable is False
