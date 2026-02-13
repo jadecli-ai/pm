@@ -6,6 +6,7 @@ memory: project
 tools:
   - Task(sdm)
   - Task(sprint-master)
+  - Task(neon-specialist)
   - Read
   - Write
   - Glob
@@ -15,6 +16,12 @@ tools:
   - mcp__memory__*
   - mcp__git__*
 hooks:
+  PreToolUse:
+    - matcher: WebFetch
+      command: "pm/scripts/neon-cache-check.sh"
+  PostToolUse:
+    - matcher: WebFetch
+      command: "pm/scripts/neon-cache-store.sh"
   TaskCompleted:
     - command: "echo '[vp-product] SDM/Sprint task completed — reviewing iteration progress'"
 ---
