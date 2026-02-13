@@ -1,0 +1,67 @@
+name: Neon Branch
+
+on:
+  pull_request:
+    types: [opened, synchronize, closed]
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Neon branch name or ID to reset'
+        required: true
+        type: string
+
+concurrency:
+  group: neon-branch-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  create-branch:
+    if: github.event_name == 'pull_request' && github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    outputs:
+      db_url: ${{ steps.create-branch.outputs.db_url }}
+      branch_id: ${{ steps.create-branch.outputs.branch_id }}
+    steps:
+      - name: Create Neon branch
+        id: create-branch
+        uses: neondatabase/create-branch-action@v6
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          branch_name: preview/pr-${{ github.event.pull_request.number }}
+          api_key: ${{ secrets.NEON_API_KEY }}
+          database: neondb
+          role: neondb_owner
+
+  run-migrations:
+    needs: create-branch
+    if: github.event_name == 'pull_request' && github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
+      - run: uv venv .venv && uv pip install -e ".[dev]"
+      - name: Run migrations
+        env:
+          PRJ_NEON_DATABASE_URL: ${{ needs.create-branch.outputs.db_url }}
+          PYTHONPATH: pm
+        run: .venv/bin/python3 -m lib.neon_docs migrate
+
+  delete-branch:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: neondatabase/delete-branch-action@v3
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          branch: preview/pr-${{ github.event.pull_request.number }}
+          api_key: ${{ secrets.NEON_API_KEY }}
+
+  reset-branch:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: neondatabase/reset-branch-action@v1
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          branch: ${{ inputs.branch }}
+          api_key: ${{ secrets.NEON_API_KEY }}
